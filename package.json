@@ -6,16 +6,24 @@
   "author": "Orgondor <max.lindgren@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "start": "yarn parcel src/index.html"
+    "start": "yarn parcel src/index.html",
+    "prepare": "cp app.yaml dist/app.yaml & cp main.py dist/main.py",
+    "deploy": "gcloud app deploy --project=maxlindgren --version=1",
+    "browse": "gcloud app browse --project=maxlindgren"
   },
   "dependencies": {
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
-    "typescript": "^4.0.5"
+    "react-router-dom": "^5.2.0",
+    "typescript": "^4.0.5",
+    "websql": "^1.0.0"
   },
   "devDependencies": {
+    "@types/node": "^14.14.6",
     "@types/react": "^16.9.55",
     "@types/react-dom": "^16.9.9",
+    "@types/react-router-dom": "^5.1.6",
+    "@types/websql": "^0.0.27",
     "parcel-bundler": "^1.12.4"
   }
 }

@@ -1,9 +1,14 @@
 import * as React from 'react';
+import { ProvideAppState } from './hooks/useAppState'
+import Router from './router'
 
 export default function App() {
+  console.log("TEST");
   return (
     <div>
-      <h2>Hello World!</h2>
+      <ProvideAppState>
+        <Router />
+      </ProvideAppState>
     </div>
   )
 }

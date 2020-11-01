@@ -192,6 +192,7 @@ const MonsterBreeding = ({monster, goBack, data}: {
                   <Header key={i} textAlign='center'>
                     {b.parent1.name + ' + ' + b.parent2.name + 
                       (b.parent2.neededPlus ? '+' + b.parent2.neededPlus : '')
+                      + ' = ' + b.result.name
                     }
                   </Header>
                 )

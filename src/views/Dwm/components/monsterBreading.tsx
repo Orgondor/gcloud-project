@@ -1,5 +1,7 @@
 import * as React from 'react';
 import sprites from '../../../images/sprites/*.png';
+import FamilyBreedingCard from './familyBreedingCard';
+import MonsterBreedingCard from './monsterBreedingCard';
 import './dwmTypes';
 
 import {
@@ -7,6 +9,7 @@ import {
   Button,
   Header,
   Grid,
+  Segment,
 } from 'semantic-ui-react';
 
 const MonsterBreeding = ({monster, goBack, data}: {
@@ -20,11 +23,8 @@ const MonsterBreeding = ({monster, goBack, data}: {
   const getMonsterName = (id: number): string => monsters.find(m => m.id === id).name;
 
   const getBreedFrom = (monster: Monster): Breed[] => {
-    return breeding.filter((b) => b.resultId === monster.id).map((b): Breed => {
+    const breedFrom = breeding.filter((b) => b.resultId === monster.id && (b.parent1Id || b.parent1FamliyId)).map((b): Breed => {
       const id1 = b.parent1Id || b.parent1FamliyId;
-      if (!(b.parent1Id || b.parent1FamliyId)) {
-        return;
-      }
       const name1 = b.parent1Id ? getMonsterName(id1) : getFamilyName(id1);
       const type1: ParentType = b.parent1Id ? 'monster' : 'family';
 
@@ -50,6 +50,7 @@ const MonsterBreeding = ({monster, goBack, data}: {
         }
       }
     });
+    return breedFrom || [];
   };
 
   const getBreedTo = (monster: Monster): Breed[] => {
@@ -101,7 +102,7 @@ const MonsterBreeding = ({monster, goBack, data}: {
       }
     });
 
-    const p2 = breeding.filter((b) => b.parent2Id === monster.id).map((b): Breed => {
+    const p2 = breeding.filter((b) => b.parent2Id === monster.id && b.parent2Id !== b.parent1Id).map((b): Breed => {
       const id1 = b.parent1Id || b.parent1FamliyId;
       const name1 = b.parent1Id ? getMonsterName(id1) : getFamilyName(id1);
       const type1: ParentType = b.parent1Id ? 'monster' : 'family';
@@ -164,40 +165,87 @@ const MonsterBreeding = ({monster, goBack, data}: {
     <div>
       <Button basic onClick={() => goBack()}>Back</Button>
       <div>
-        <Image src={sprites[`${monster.name}`]} centered />
+        <Image src={sprites[`${monster.name}`]} centered size='tiny' />
         <Header textAlign='center'>{monster.name}</Header>
       </div>
       <div style={{height: '30px'}} />
       <Grid stackable>
         <Grid.Row>
-          <Grid.Column width='8'>
-            <Header textAlign='center'>Breed From</Header>
-            {
-              breedFrom.map(
-                (b, i) => (
-                  <Header key={i} textAlign='center'>
-                    {b.parent1.name + ' + ' + b.parent2.name + 
-                      (b.parent2.neededPlus ? '+' + b.parent2.neededPlus : '')
-                    }
-                  </Header>
+          <Grid.Column width='6'>
+            <Segment>
+              <Header textAlign='center'>Breed From</Header>
+              {
+                breedFrom.map(
+                  (b, i) => (
+                    <div key={i} style={{
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      marginTop: '10px'
+                      }}>
+                      {b.parent1.type === 'monster'
+                      ?
+                      <MonsterBreedingCard monster={b.parent1} />
+                      :
+                      <FamilyBreedingCard family={b.parent1} />
+                      }
+
+                      <div style={{width: '40px'}}>
+                        <Header textAlign='center'>{'+'}</Header>
+                      </div>
+                      
+                      {b.parent2.type === 'monster'
+                      ?
+                      <MonsterBreedingCard monster={b.parent2} />
+                      :
+                      <FamilyBreedingCard family={b.parent2} />
+                      }
+                    </div>
+                  )
                 )
-              )
-            }
+              }
+            </Segment>
           </Grid.Column>
-          <Grid.Column width='8'>
-            <Header textAlign='center'>Breed Into</Header>
-            {
-              breedTo.map(
-                (b, i) => (
-                  <Header key={i} textAlign='center'>
-                    {b.parent1.name + ' + ' + b.parent2.name + 
-                      (b.parent2.neededPlus ? '+' + b.parent2.neededPlus : '')
-                      + ' = ' + b.result.name
-                    }
-                  </Header>
+          <Grid.Column width='10'>
+            <Segment>
+              <Header textAlign='center'>Breed Into</Header>
+              {
+                breedTo.map(
+                  (b, i) => (
+                    <div key={i} style={{
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      marginTop: '10px'
+                      }}>
+                      {b.parent1.type === 'monster'
+                      ?
+                      <MonsterBreedingCard monster={b.parent1} />
+                      :
+                      <FamilyBreedingCard family={b.parent1} />
+                      }
+
+                      <div style={{width: '40px'}}>
+                        <Header textAlign='center'>{'+'}</Header>
+                      </div>
+                      
+                      {b.parent2.type === 'monster'
+                      ?
+                      <MonsterBreedingCard monster={b.parent2} />
+                      :
+                      <FamilyBreedingCard family={b.parent2} />
+                      }
+
+                      <div style={{width: '40px'}}>
+                        <Header textAlign='center'>{'='}</Header>
+                      </div>
+
+                      <MonsterBreedingCard monster={{...b.result, type: 'monster'}} />
+                    </div>
+                  )
                 )
-              )
-            }
+              }
+            </Segment>
           </Grid.Column>
         </Grid.Row>
       </Grid>

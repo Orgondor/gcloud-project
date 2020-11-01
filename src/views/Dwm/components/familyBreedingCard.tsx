@@ -3,26 +3,22 @@ import sprites from '../../../images/sprites/*.png';
 import './dwmTypes';
 
 import {
-  Card,
+  Header,
   Image,
 } from 'semantic-ui-react';
 
 const FamilyBreedingCard = ({family}: {
-  family: Family,
+  family: Parent2,
 }) => (
-  <div style={{width: '150px', padding: '5px'}}>
-    <Card>
-      <div style={{height: '100px', marginTop: '5px'}}>
-        <Image
-          src={sprites[`${family.name}-family`]}
-          size='tiny'
-          centered
-        />
-      </div>
-      <Card.Content>
-        <Card.Header>{family.name}</Card.Header>
-      </Card.Content>
-    </Card>
+  <div style={{width: '200px'}}>
+    <Image
+      src={sprites[`${family.name}-family`]}
+      fluid
+      centered
+    />
+    <Header textAlign='center'>
+      {family.name + ' family' + (family.neededPlus ? '+' + family.neededPlus : '')}
+    </Header>
   </div>
 );
 

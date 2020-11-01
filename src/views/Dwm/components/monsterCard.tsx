@@ -13,7 +13,7 @@ const MonsterCard = ({monster, onClick}: {
 }) => (
   <div style={{width: '150px', padding: '5px'}}>
     <Card onClick={() => onClick(monster)}>
-      <div style={{height: '100px', marginTop: '5px'}}>
+      <div style={{height: '100px', display: 'flex', alignItems: 'center'}}>
         <Image
           src={sprites[`${monster.name}`]}
           size='tiny'

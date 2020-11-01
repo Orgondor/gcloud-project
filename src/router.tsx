@@ -1,47 +1,62 @@
-import * as React from 'react'
+import * as React from 'react';
 import {
   BrowserRouter,
   Switch,
   Route,
   Link
 } from 'react-router-dom';
-import { useAppState } from './hooks/useAppState'
+import { Menu } from 'semantic-ui-react';
+import Home from './views/Home';
+import Dwm from './views/Dwm/Dwm';
 
-const About = ({data}: any) => (
-  <p>{data.map(e => e.name)}</p>
-)
+type ViewRoute = {
+  routeOrder: number,
+  title: string,
+  url: string,
+  Component: () => JSX.Element,
+}
 
-const Home = () => (
-  <p>Home Page</p>
-)
+const routes: ViewRoute[] = [
+  {
+    routeOrder: 9,
+    title: 'Home',
+    url: '/',
+    Component: Home,
+  },
+  {
+    routeOrder: 1,
+    title: 'Dragon Warrior Monsters',
+    url: '/dwm',
+    Component: Dwm,
+  },
+]
 
 const Router = () => {
-  const appState = useAppState();
-
   return (
     <BrowserRouter>
       <div>
         <nav>
-          <ul>
-            <li>
-              <Link to="/">Home</Link>
-            </li>
-            <li>
-              <Link to="/about">About</Link>
-            </li>
-          </ul>
+          <Menu stackable >
+            {routes.map((r, i) => (
+              <Menu.Item key={i} as={Link} name={r.title} to={r.url} >
+                {r.title}
+              </Menu.Item>
+            ))}
+            <Menu.Item as={'a'} href='http://github.com/orgondor' icon='github' position='right' />
+          </Menu>
         </nav>
 
         {/* A <Switch> looks through its children <Route>s and
             renders the first one that matches the current URL. */}
-        <Switch>
-          <Route path="/about">
-            <About data={appState.data} />
-          </Route>
-          <Route path="/">
-            <Home />
-          </Route>
-        </Switch>
+        <div style={{maxWidth: '1216px', marginLeft: 'auto', marginRight: 'auto'}}>
+          <Switch>
+            {routes.sort((a, b) => a.routeOrder - b.routeOrder).map(({title, url, Component}, i) => {
+              console.log("URL:", url, title)
+              return (
+              <Route key={i} path={url} render={() => <Component />} />
+            )})}
+          </Switch>
+        </div>
       </div>
     </BrowserRouter>
   )

@@ -1,12 +1,9 @@
 import * as React from 'react';
-const importData = require('../data/data.json');
 
 type AppStateProps = {
-  data: any
 };
 
 const defaultProps: AppStateProps = {
-  data: importData,
 };
 
 const appStateContext = React.createContext<AppStateProps>(defaultProps);
@@ -23,9 +20,7 @@ export const ProvideAppState: React.FunctionComponent<ProviderProps> = ({ childr
 };
 
 function useProvideAppState(): AppStateProps {
-  const [data, setData] = React.useState(defaultProps.data);
 
   return {
-    data,
   };
 }

@@ -18,23 +18,37 @@ const Dwm = () => {
   const appState = useAppState();
   const [families, setFamilies] = React.useState(importData.families.map((f) => ({...f, selected: true})));
   const [filter, setFilter] = React.useState('');
-  const [selected, setSelected] = React.useState(null as Monster);
+  const [selected, setSelected] = React.useState([] as Monster[]);
 
-  React.useEffect(() => {
-  }, [appState])
-
-  const onClickMonster = (monster: Monster) => {
-    setSelected(monster);
+  const pushSelected = (monster: Monster) => {
+    setSelected([...selected, monster]);
   }
+
+  const popSelected = () => {
+    const popped = selected.slice();
+    popped.pop();
+    setSelected(popped);
+  }
+
+  const emptySelected = () => {
+    setSelected([]);
+  }
+
+  // React.useEffect(() => {
+  //   console.log("selected:", selected);
+  //   console.log("breed:", selected[selected.length-1]);
+  // }, [selected])
 
   return (
     <Segment>
       {
-        selected ? (
+        selected.length ? (
           <MonsterBreading
             data={importData}
-            monster={selected}
-            goBack={() => {setSelected(null)}}
+            selected={selected}
+            goBack={popSelected}
+            toSearch={emptySelected}
+            onClickMonster={pushSelected}
           />
         ) : (
           <MonsterSearch
@@ -43,7 +57,7 @@ const Dwm = () => {
             setFamilies={setFamilies}
             filter={filter}
             setFilter={setFilter}
-            onClickMonster={onClickMonster}
+            onClickMonster={pushSelected}
           />
         )
       }

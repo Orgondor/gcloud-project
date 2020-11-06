@@ -17,7 +17,7 @@ const listMonsters = (
   monsters: Monster[],
   families: SelectFamily[],
   filter: string,
-  onClick: (monster: Monster) => void
+  onClick: (monster: Monster) => unknown
   ) =>
   monsters
   .filter((m) => families.find((f) => f.id === m.familyId).selected)
@@ -32,7 +32,7 @@ const MonsterSearch = ({data, families, setFamilies, filter, setFilter, onClickM
     setFamilies: (f: SelectFamily[]) => unknown,
     filter: string,
     setFilter: (f: string) => unknown,
-    onClickMonster: (monster: Monster) => void,
+    onClickMonster: (monster: Monster) => unknown,
   }) => {
 
   const onClickFamiliy = (id: number) => {

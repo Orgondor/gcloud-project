@@ -9,7 +9,7 @@ import {
 
 const MonsterCard = ({monster, onClick}: {
   monster: Monster,
-  onClick: (monster: Monster) => void,
+  onClick: (monster: Monster) => unknown,
 }) => (
   <div style={{width: '150px', padding: '5px'}}>
     <Card onClick={() => onClick(monster)}>
@@ -21,7 +21,7 @@ const MonsterCard = ({monster, onClick}: {
         />
       </div>
       <Card.Content>
-        <Card.Header>{monster.name}</Card.Header>
+        <Card.Header textAlign="center">{monster.name}</Card.Header>
       </Card.Content>
     </Card>
   </div>

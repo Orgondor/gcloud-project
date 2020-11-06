@@ -26,9 +26,7 @@ type Breeding = {
 
 type ParentType = 'monster' | 'family'
 
-type Parent1 = {
-  id: number,
-  name: string,
+type Parent1 = Monster & {
   type: ParentType,
 }
 
@@ -36,13 +34,8 @@ type Parent2 = Parent1 & {
   neededPlus?: number,
 }
 
-type Offspring = {
-  id: number,
-  name: string,
-}
-
 type Breed = {
-  result: Offspring,
+  result: Monster,
   parent1: Parent1,
   parent2: Parent2,
 }

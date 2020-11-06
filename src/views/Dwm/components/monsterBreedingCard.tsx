@@ -3,23 +3,29 @@ import sprites from '../../../images/sprites/*.png';
 import './dwmTypes';
 
 import {
-  Header,
+  Card,
   Image,
 } from 'semantic-ui-react';
 
-const MonsterBreedingCard = ({monster}: {
-  monster: Parent2,
+const MonsterCard = ({monster, onClick}: {
+  monster: Monster,
+  onClick: (monster: Monster) => unknown,
 }) => (
-  <div style={{width: '100px'}}>
-    <Image
-      src={sprites[`${monster.name}`]}
-      size='tiny'
-      centered
-    />
-    <Header textAlign='center'>
-      {monster.name + (monster.neededPlus ? '+' + monster.neededPlus : '')}
-    </Header>
-  </div>
+  <Card onClick={() => onClick(monster)}>
+    <div style={{height: '100px', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+      <div style={{flexBasis: '80px'}}>
+        <Image
+          style={{flexGrow: 1}}
+          src={sprites[`${monster.name}`]}
+          fluid
+          centered
+        />
+      </div>
+    </div>
+    <Card.Content>
+      <Card.Header textAlign="center">{monster.name}</Card.Header>
+    </Card.Content>
+  </Card>
 );
 
-export default MonsterBreedingCard;
+export default MonsterCard;

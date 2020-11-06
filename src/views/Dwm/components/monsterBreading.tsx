@@ -11,40 +11,50 @@ import {
   Grid,
   Segment,
 } from 'semantic-ui-react';
+import { on } from 'process';
 
-const MonsterBreeding = ({monster, goBack, data}: {
-  monster: Monster,
+const MonsterBreeding = ({selected, goBack, toSearch, onClickMonster, data}: {
+  selected: Monster[],
   goBack: () => void,
+  toSearch: () => void,
+  onClickMonster: (monster: Monster) => unknown,
   data: MonsterDataCollection,
 }) => {
   const { monsters, families, breeding } = data;
+  const monster = selected[selected.length-1];
 
   const getFamilyName = (id: number): string => families.find(f => f.id === id).name;
   const getMonsterName = (id: number): string => monsters.find(m => m.id === id).name;
+  const getMonsterFamilyId = (id: number): number => monsters.find(m => m.id === id).familyId;
 
   const getBreedFrom = (monster: Monster): Breed[] => {
     const breedFrom = breeding.filter((b) => b.resultId === monster.id && (b.parent1Id || b.parent1FamliyId)).map((b): Breed => {
       const id1 = b.parent1Id || b.parent1FamliyId;
       const name1 = b.parent1Id ? getMonsterName(id1) : getFamilyName(id1);
+      const familyId1 = b.parent1Id ? getMonsterFamilyId(id1) : id1;
       const type1: ParentType = b.parent1Id ? 'monster' : 'family';
 
       const id2 = b.parent2Id || b.parent2FamliyId;
       const name2 = b.parent2Id ? getMonsterName(id2) : getFamilyName(id2);
+      const familyId2 = b.parent2Id ? getMonsterFamilyId(id2) : id2;
       const type2: ParentType = b.parent2Id ? 'monster' : 'family';
 
       return {
         result: {
           id: monster.id,
           name: monster.name,
+          familyId: monster.familyId,
         },
         parent1: {
           id: id1,
           name: name1,
+          familyId: familyId1,
           type: type1,
         },
         parent2: {
           id: id2,
           name: name2,
+          familyId: familyId2,
           type: type2,
           neededPlus: b.parent2NeededPlus,
         }
@@ -57,21 +67,25 @@ const MonsterBreeding = ({monster, goBack, data}: {
     const p1 = breeding.filter((b) => b.parent1Id === monster.id).map((b): Breed => {
       const id2 = b.parent2Id || b.parent2FamliyId;
       const name2 = b.parent2Id ? getMonsterName(id2) : getFamilyName(id2);
+      const familyId2 = b.parent2Id ? getMonsterFamilyId(id2) : id2;
       const type2: ParentType = b.parent2Id ? 'monster' : 'family';
 
       return {
         result: {
           id: b.resultId,
           name: getMonsterName(b.resultId),
+          familyId: getMonsterFamilyId(b.resultId),
         },
         parent1: {
           id: monster.id,
           name: monster.name,
+          familyId: monster.familyId,
           type: 'monster',
         },
         parent2: {
           id: id2,
           name: name2,
+          familyId: familyId2,
           type: type2,
           neededPlus: b.parent2NeededPlus,
         }
@@ -81,21 +95,25 @@ const MonsterBreeding = ({monster, goBack, data}: {
     const f1 = breeding.filter((b) => b.parent1FamliyId === monster.familyId).map((b): Breed => {
       const id2 = b.parent2Id || b.parent2FamliyId;
       const name2 = b.parent2Id ? getMonsterName(id2) : getFamilyName(id2);
+      const familyId2 = b.parent2Id ? getMonsterFamilyId(id2) : id2;
       const type2: ParentType = b.parent2Id ? 'monster' : 'family';
 
       return {
         result: {
           id: b.resultId,
           name: getMonsterName(b.resultId),
+          familyId: getMonsterFamilyId(b.resultId),
         },
         parent1: {
           id: monster.familyId,
           name: getFamilyName(monster.familyId),
+          familyId: monster.familyId,
           type: 'family',
         },
         parent2: {
           id: id2,
           name: name2,
+          familyId: familyId2,
           type: type2,
           neededPlus: b.parent2NeededPlus,
         }
@@ -105,21 +123,25 @@ const MonsterBreeding = ({monster, goBack, data}: {
     const p2 = breeding.filter((b) => b.parent2Id === monster.id && b.parent2Id !== b.parent1Id).map((b): Breed => {
       const id1 = b.parent1Id || b.parent1FamliyId;
       const name1 = b.parent1Id ? getMonsterName(id1) : getFamilyName(id1);
+      const familyId1 = b.parent1Id ? getMonsterFamilyId(id1) : id1;
       const type1: ParentType = b.parent1Id ? 'monster' : 'family';
 
       return {
         result: {
           id: b.resultId,
           name: getMonsterName(b.resultId),
+          familyId: getMonsterFamilyId(b.resultId),
         },
         parent1: {
           id: id1,
           name: name1,
+          familyId: familyId1,
           type: type1,
         },
         parent2: {
           id: monster.id,
           name: monster.name,
+          familyId: monster.familyId,
           type: 'monster',
           neededPlus: b.parent2NeededPlus,
         }
@@ -129,21 +151,25 @@ const MonsterBreeding = ({monster, goBack, data}: {
     const f2 = breeding.filter((b) => b.parent2FamliyId === monster.familyId).map((b): Breed => {
       const id1 = b.parent1Id || b.parent1FamliyId;
       const name1 = b.parent1Id ? getMonsterName(id1) : getFamilyName(id1);
+      const familyId1 = b.parent1Id ? getMonsterFamilyId(id1) : id1;
       const type1: ParentType = b.parent1Id ? 'monster' : 'family';
 
       return {
         result: {
           id: b.resultId,
           name: getMonsterName(b.resultId),
+          familyId: getMonsterFamilyId(b.resultId),
         },
         parent1: {
           id: id1,
           name: name1,
+          familyId: familyId1,
           type: type1,
         },
         parent2: {
           id: monster.familyId,
           name: getFamilyName(monster.familyId),
+          familyId: monster.familyId,
           type: 'family',
           neededPlus: b.parent2NeededPlus,
         }
@@ -164,6 +190,7 @@ const MonsterBreeding = ({monster, goBack, data}: {
   return (
     <div>
       <Button basic onClick={() => goBack()}>Back</Button>
+      {selected.length > 1 ? <Button basic onClick={() => toSearch()}>To Search</Button> : null}
       <div>
         <Image src={sprites[`${monster.name}`]} centered size='tiny' />
         <Header textAlign='center'>{monster.name}</Header>
@@ -185,7 +212,7 @@ const MonsterBreeding = ({monster, goBack, data}: {
                       }}>
                       {b.parent1.type === 'monster'
                       ?
-                      <MonsterBreedingCard monster={b.parent1} />
+                      <MonsterBreedingCard monster={b.parent1} onClick={onClickMonster} />
                       :
                       <FamilyBreedingCard family={b.parent1} />
                       }
@@ -196,7 +223,7 @@ const MonsterBreeding = ({monster, goBack, data}: {
                       
                       {b.parent2.type === 'monster'
                       ?
-                      <MonsterBreedingCard monster={b.parent2} />
+                      <MonsterBreedingCard monster={b.parent2} onClick={onClickMonster} />
                       :
                       <FamilyBreedingCard family={b.parent2} />
                       }
@@ -220,7 +247,7 @@ const MonsterBreeding = ({monster, goBack, data}: {
                       }}>
                       {b.parent1.type === 'monster'
                       ?
-                      <MonsterBreedingCard monster={b.parent1} />
+                      <MonsterBreedingCard monster={b.parent1} onClick={onClickMonster} />
                       :
                       <FamilyBreedingCard family={b.parent1} />
                       }
@@ -231,7 +258,7 @@ const MonsterBreeding = ({monster, goBack, data}: {
                       
                       {b.parent2.type === 'monster'
                       ?
-                      <MonsterBreedingCard monster={b.parent2} />
+                      <MonsterBreedingCard monster={b.parent2} onClick={onClickMonster} />
                       :
                       <FamilyBreedingCard family={b.parent2} />
                       }
@@ -240,7 +267,7 @@ const MonsterBreeding = ({monster, goBack, data}: {
                         <Header textAlign='center'>{'='}</Header>
                       </div>
 
-                      <MonsterBreedingCard monster={{...b.result, type: 'monster'}} />
+                      <MonsterBreedingCard monster={b.result}  onClick={onClickMonster} />
                     </div>
                   )
                 )

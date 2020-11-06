@@ -7,25 +7,24 @@ import {
   Image,
 } from 'semantic-ui-react';
 
-const MonsterCard = ({monster, onClick}: {
+const MonsterBreedingCard = ({monster, onClick}: {
   monster: Monster,
   onClick: (monster: Monster) => unknown,
 }) => (
-  <Card onClick={() => onClick(monster)}>
-    <div style={{height: '100px', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-      <div style={{flexBasis: '80px'}}>
+  <div style={{width: '150px', padding: '5px'}}>
+    <Card onClick={() => onClick(monster)}>
+      <div style={{height: '100px', display: 'flex', alignItems: 'center'}}>
         <Image
-          style={{flexGrow: 1}}
           src={sprites[`${monster.name}`]}
-          fluid
+          size='tiny'
           centered
         />
       </div>
-    </div>
-    <Card.Content>
-      <Card.Header textAlign="center">{monster.name}</Card.Header>
-    </Card.Content>
-  </Card>
+      <Card.Content>
+        <Card.Header textAlign="center">{monster.name}</Card.Header>
+      </Card.Content>
+    </Card>
+  </div>
 );
 
-export default MonsterCard;
+export default MonsterBreedingCard;

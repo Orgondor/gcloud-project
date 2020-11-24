@@ -7,9 +7,10 @@ import {
   Image,
 } from 'semantic-ui-react';
 
-const MonsterBreedingCard = ({monster, onClick}: {
+const MonsterBreedingCard = ({monster, onClick, neededPlus}: {
   monster: Monster,
   onClick: (monster: Monster) => unknown,
+  neededPlus?: number | undefined,
 }) => (
   <div style={{width: '150px', padding: '5px'}}>
     <Card onClick={() => onClick(monster)}>
@@ -21,7 +22,7 @@ const MonsterBreedingCard = ({monster, onClick}: {
         />
       </div>
       <Card.Content>
-        <Card.Header textAlign="center">{monster.name}</Card.Header>
+        <Card.Header textAlign="center">{monster.name + (neededPlus ? " + " + neededPlus : "")}</Card.Header>
       </Card.Content>
     </Card>
   </div>

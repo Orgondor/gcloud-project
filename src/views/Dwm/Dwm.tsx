@@ -34,10 +34,9 @@ const Dwm = () => {
     setSelected([]);
   }
 
-  // React.useEffect(() => {
-  //   console.log("selected:", selected);
-  //   console.log("breed:", selected[selected.length-1]);
-  // }, [selected])
+  React.useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [selected])
 
   return (
     <Segment>

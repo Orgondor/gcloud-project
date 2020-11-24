@@ -51,7 +51,6 @@ const Router = () => {
         <div style={{maxWidth: '1216px', marginLeft: 'auto', marginRight: 'auto'}}>
           <Switch>
             {routes.sort((a, b) => a.routeOrder - b.routeOrder).map(({title, url, Component}, i) => {
-              console.log("URL:", url, title)
               return (
               <Route key={i} path={url} render={() => <Component />} />
             )})}

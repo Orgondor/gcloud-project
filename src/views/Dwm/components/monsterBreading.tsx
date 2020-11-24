@@ -177,10 +177,10 @@ const MonsterBreeding = ({selected, goBack, toSearch, onClickMonster, data}: {
     });
 
     return [
+      ...p1.reverse(),
+      ...p2.reverse(),
       ...f1,
       ...f2,
-      ...p1,
-      ...p2,
     ];
   };
 
@@ -223,7 +223,7 @@ const MonsterBreeding = ({selected, goBack, toSearch, onClickMonster, data}: {
                       
                       {b.parent2.type === 'monster'
                       ?
-                      <MonsterBreedingCard monster={b.parent2} onClick={onClickMonster} />
+                      <MonsterBreedingCard monster={b.parent2} onClick={onClickMonster} neededPlus={b.parent2.neededPlus} />
                       :
                       <FamilyBreedingCard family={b.parent2} />
                       }
@@ -258,7 +258,7 @@ const MonsterBreeding = ({selected, goBack, toSearch, onClickMonster, data}: {
                       
                       {b.parent2.type === 'monster'
                       ?
-                      <MonsterBreedingCard monster={b.parent2} onClick={onClickMonster} />
+                      <MonsterBreedingCard monster={b.parent2} onClick={onClickMonster} neededPlus={b.parent2.neededPlus} />
                       :
                       <FamilyBreedingCard family={b.parent2} />
                       }

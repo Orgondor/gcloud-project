@@ -12,6 +12,7 @@
     "browse": "gcloud app browse --project=maxlindgren"
   },
   "dependencies": {
+    "gl-matrix": "^3.3.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-router-dom": "^5.2.0",
@@ -21,6 +22,7 @@
     "websql": "^1.0.0"
   },
   "devDependencies": {
+    "@types/gl-matrix": "^3.2.0",
     "@types/node": "^14.14.6",
     "@types/react": "^16.9.55",
     "@types/react-dom": "^16.9.9",

@@ -1,5 +1,5 @@
 Arguments: 
-  /usr/local/bin/node /Users/maxlindrgen/.yarn/bin/yarn.js add @types/semantic-ui-react -D
+  /usr/local/bin/node /Users/maxlindrgen/.yarn/bin/yarn.js add -D @types/gl-Matrix
 
 PATH: 
   /Users/maxlindrgen/.yarn/bin:/Users/maxlindrgen/.config/yarn/global/node_modules/.bin:/Library/Frameworks/Python.framework/Versions/3.8/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/go/bin:/Library/Apple/usr/bin:/Users/maxlindrgen/.yarn/bin:/Users/maxlindrgen/.config/yarn/global/node_modules/.bin:/Library/Frameworks/Python.framework/Versions/3.8/bin
@@ -14,7 +14,7 @@ Platform:
   darwin x64
 
 Trace: 
-  Error: https://registry.yarnpkg.com/@types%2fsemantic-ui-react: Not found
+  Error: https://registry.yarnpkg.com/@types%2fgl-Matrix: Not found
       at Request.params.callback [as _callback] (/Users/maxlindrgen/.yarn/lib/cli.js:66982:18)
       at Request.self.callback (/Users/maxlindrgen/.yarn/lib/cli.js:140743:22)
       at Request.emit (events.js:315:20)

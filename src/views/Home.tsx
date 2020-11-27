@@ -6,6 +6,7 @@ const Home = () => {
 
   return (
     <div>
+      <h1>A Collection of random projects</h1>
     </div>
   )
 };

@@ -8,8 +8,9 @@ const Home = () => {
     WebGL("webgl");
   });
   return (
-    <div style={{display: "flex", justifyContent: "center", marginTop: "20px"}}>
-      <canvas id="webgl" width="800" height="600" style={{border: "1px solid black"}}></canvas>
+    // <div style={{display: "flex", justifyContent: "center", marginTop: "20px"}}>
+    <div style={{position: "absolute", left: "0px", width: "100%", height: "100%"}}>
+      <canvas id="webgl" style={{border: "1px solid black", width: "100%", height: "100%"}}></canvas>
     </div>
   )
 };

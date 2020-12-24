@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "src/index.tsx",
   "repository": "https://github.com/Orgondor/gcloud-project.git",
-  "author": "Orgondor <max.lindgren@gmail.com>",
+  "author": "Orgondor <maxlindgren@live.com>",
   "license": "MIT",
   "scripts": {
     "start": "yarn parcel src/index.html",

@@ -29,7 +29,6 @@ class GLManager {
   addElementArrayBufferData = (indicies: number[]) => this.gl.bufferData(this.gl.ELEMENT_ARRAY_BUFFER, new Int16Array(indicies), this.gl.STATIC_DRAW);
 
   // shader functions
-
   createVertexShader = () => this.gl.createShader(this.gl.VERTEX_SHADER);
   createFragmentShader = () => this.gl.createShader(this.gl.FRAGMENT_SHADER);
 
@@ -47,11 +46,24 @@ class GLManager {
   drawTriangles = (numberOfIndicies: number) => this.gl.drawElements(this.gl.TRIANGLES, numberOfIndicies, this.gl.UNSIGNED_SHORT, 0);
 
   uploadMatrix4fv = (location: WebGLUniformLocation, matrix: mat4) => this.gl.uniformMatrix4fv(location, false, matrix)
-  getUniformLocation = (program: WebGLProgram, uniform: string) => this.gl.getUniformLocation(program, uniform);
-  
   uploadVec3f = (location: WebGLUniformLocation, vec: vec3) => this.gl.uniform3fv(location, vec);
-  
   uploadFloat = (location: WebGLUniformLocation, value: number) => this.gl.uniform1f(location, value)
+  uploadInt = (location: WebGLUniformLocation, value: number) => this.gl.uniform1i(location, value);
+  uploadBool = (location: WebGLUniformLocation, value: boolean) => this.gl.uniform1i(location, value ? 1 : 0);
+
+  getUniformLocation = (program: WebGLProgram, uniform: string) => this.gl.getUniformLocation(program, uniform);
+
+  createTexture = () => this.gl.createTexture();
+  bindTexture = (texture: WebGLTexture) => this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
+  activeTexture = (texture: number) => this.gl.activeTexture(this.gl.TEXTURE0 + texture);
+  defineTexture = (img: TexImageSource) => this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, this.gl.RGBA, this.gl.UNSIGNED_BYTE, img);
+  defineDummyTexture = () => this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, 1, 1, 0, this.gl.RGBA, this.gl.UNSIGNED_BYTE, new Uint8Array([0,0, 255, 255]));
+  texturePowerOfTwo = () => this.gl.generateMipmap(this.gl.TEXTURE_2D);
+  textureNoPowerOfTwo = () => {
+    this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_S, this.gl.CLAMP_TO_EDGE)
+    this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_T, this.gl.CLAMP_TO_EDGE)
+    this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.LINEAR)
+  };
 }
 
 const GLM = new GLManager();

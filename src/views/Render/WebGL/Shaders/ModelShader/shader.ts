@@ -13,6 +13,8 @@ export default class ModelShader {
   diffuseTexture: WebGLUniformLocation;
   hasDiffuseTexture: WebGLUniformLocation;
   transformationMatrix: WebGLUniformLocation;
+  viewMatrix: WebGLUniformLocation;
+  projectionMatrix: WebGLUniformLocation;
   lightPosition: WebGLUniformLocation;
   lightColor: WebGLUniformLocation;
   lightAmibient: WebGLUniformLocation;
@@ -39,6 +41,8 @@ export default class ModelShader {
     this.diffuseTexture = GLM.getUniformLocation(program, Locations.DIFFUSE_TEXTURE);
     this.hasDiffuseTexture = GLM.getUniformLocation(program, Locations.HAS_DIFFUSE_TEXTURE);
     this.transformationMatrix = GLM.getUniformLocation(program, Locations.TRANSFORMATION_MATRIX);
+    this.viewMatrix = GLM.getUniformLocation(program, Locations.VIEW_MATRIX);
+    this.projectionMatrix = GLM.getUniformLocation(program, Locations.PROJECTION_MATRIX);
     this.lightPosition = GLM.getUniformLocation(program, Locations.LIGHT_POSITION);
     this.lightColor = GLM.getUniformLocation(program, Locations.LIGHT_COLOR);
     this.lightAmibient = GLM.getUniformLocation(program, Locations.LIGHT_AMBIENT);
@@ -72,6 +76,11 @@ export default class ModelShader {
 
   enableTransformationMatrix = (matrix: mat4) => {
     GLM.uploadMatrix4fv(this.transformationMatrix, matrix);
+  }
+
+  enableViewProjectionMatrices = (viewMatrix: mat4, projectionMatrix: mat4) => {
+    GLM.uploadMatrix4fv(this.viewMatrix, viewMatrix);
+    GLM.uploadMatrix4fv(this.projectionMatrix, projectionMatrix);
   }
 
   enableLight = (light: Light) => {

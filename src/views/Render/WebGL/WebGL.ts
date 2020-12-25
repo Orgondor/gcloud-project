@@ -6,7 +6,10 @@ import ModelInstance from "./Models/ModelInstance";
 import cube from "./Models/cube"
 import Light from "./LightSource/Light"
 import Material from "./Materials/material"
-import diffuse from "../../../images/sexkaitb_2K_Albedo.jpg"
+import Camera from "./Camera/camera";
+import MouseEvent from "./EventHandlers/mouse";
+import diffuse from "../../../images/sexkaitb_2K_Albedo.jpg";
+import ModelInstace from './Models/ModelInstance';
 
 export default (canvasId: string) => {
   console.log("DIFFUSE:", diffuse);
@@ -34,6 +37,7 @@ export default (canvasId: string) => {
   }
 
   GLM.init(gl);
+  MouseEvent.init();
 
   const modelRenderer = new ModelRenderer();
   const light = new Light(100, 100, -100, 1.0, 1.0, 1.0, 0.3);
@@ -42,13 +46,27 @@ export default (canvasId: string) => {
   const modelType = new ModelType(cube.vertices, cube.indices, cube.normals, cube.textureCoords);
   modelType.addMaterial(material);
   modelRenderer.registerNewModel(modelType, "cube");
-  const instance = new ModelInstance(0, 0, 0, 0, 0, 0, 0.5);
-  modelRenderer.addInstance(instance, "cube");
+
+  const camera = new Camera();
+
+  const instances: ModelInstace[] = [];
+
+  // for (let i = 0; i < 9; i++) {
+  //   instances.push(new ModelInstance());
+  //   modelRenderer.addInstance(instances[i], "cube");
+  // }
+
+  for (let i = 0; i < 9; i++) {
+    instances.push(new ModelInstance((i % 3) * 5, Math.floor(i / 3) * 5));
+    modelRenderer.addInstance(instances[i], "cube");
+  }
 
   const render = () => {
     GLM.clear(0, 0, 0, 1);
-    instance.updateRotation(0.2, 0.2, 0.2);
-    modelRenderer.render(light);
+    instances.forEach((instance, i) => {
+      instance.updateRotation(0.1 * i, 0.1 * i, 0.1 * i);
+    });
+    modelRenderer.render(light, camera);
     window.requestAnimationFrame(render);
   }
 

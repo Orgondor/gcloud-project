@@ -4,6 +4,7 @@ import Shader from "../Shaders/ModelShader/shader";
 import ModelType from "../Models/ModelType";
 import ModelInstance from "../Models/ModelInstance";
 import Light from "../LightSource/Light";
+import Camera from "../Camera/camera";
 
 type Model = {
   type: ModelType;
@@ -12,7 +13,7 @@ type Model = {
 
 export default class ModelRenderer {
   shader: Shader;
-  models: { [index:string] : Model };
+  models: { [index: string] : Model };
 
   constructor() {
     this.shader = new Shader();
@@ -37,10 +38,11 @@ export default class ModelRenderer {
     GLM.depthTest(true);
   }
 
-  render = (light: Light) => {
+  render = (light: Light, camera: Camera) => {
     this.preRender();
     this.shader.use();
     this.shader.enableLight(light);
+    camera.enable(this.shader);
     Object.keys(this.models).forEach((model) => {
       this.models[model].type.use(this.shader)
       this.models[model].instances.forEach((instance) => {

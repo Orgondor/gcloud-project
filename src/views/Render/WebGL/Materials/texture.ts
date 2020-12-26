@@ -4,11 +4,15 @@ export default class Texture {
   texture: WebGLTexture;
   done: boolean;
 
-  constructor(){
+  constructor(isNormalMap = false){
     this.done = false;
     this.texture = GLM.createTexture();
     GLM.bindTexture(this.texture);
-    GLM.defineDummyTexture();
+    if (isNormalMap) {
+      GLM.defineDummyNormalTexture();
+    } else {
+      GLM.defineDummyTexture();
+    }
   }
 
   loadTexture = (url: string) => {
@@ -19,7 +23,6 @@ export default class Texture {
   }
 
   onLoad = (img: TexImageSource) => {
-    console.log("ONLOAD", img);
     GLM.bindTexture(this.texture);
     GLM.defineTexture(img);
     if (this.isPowerOfTwo(img.width) && this.isPowerOfTwo(img.height)) {

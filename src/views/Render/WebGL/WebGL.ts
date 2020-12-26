@@ -8,12 +8,12 @@ import Light from "./LightSource/Light"
 import Material from "./Materials/material"
 import Camera from "./Camera/camera";
 import MouseEvent from "./EventHandlers/mouse";
+import KeyEvent from "./EventHandlers/keyboard";
 import diffuse from "../../../images/sexkaitb_2K_Albedo.jpg";
+import normalMap from "../../../images/sexkaitb_2K_Normal.jpg";
 import ModelInstace from './Models/ModelInstance';
 
 export default (canvasId: string) => {
-  console.log("DIFFUSE:", diffuse);
-
   const canvas = document.getElementById(canvasId);
   if (!canvas) {
     console.error("Failed to find canvas component with id:", canvasId);
@@ -27,6 +27,8 @@ export default (canvasId: string) => {
     const cs = getComputedStyle(canvas);
     canvas.width = parseInt(cs.getPropertyValue("width"), 10);
     canvas.height = parseInt(cs.getPropertyValue("height"), 10);
+    canvas.style.outline = "none";
+    canvas.tabIndex = -1;
   }
 
   const gl = canvas.getContext("webgl2");
@@ -38,18 +40,22 @@ export default (canvasId: string) => {
 
   GLM.init(gl);
   MouseEvent.init();
+  KeyEvent.init();
 
   const modelRenderer = new ModelRenderer();
-  const light = new Light(100, 100, -100, 1.0, 1.0, 1.0, 0.3);
+  const light = new Light(100, -100, 100, 1.0, 1.0, 1.0, 0.3);
   const material = new Material();
   material.addDiffuse(diffuse);
-  const modelType = new ModelType(cube.vertices, cube.indices, cube.normals, cube.textureCoords);
+  material.addNormalMap(normalMap);
+  const modelType = new ModelType(cube.vertices, cube.indices, cube.normals, cube.tangents, cube.textureCoords, cube.colors);
   modelType.addMaterial(material);
   modelRenderer.registerNewModel(modelType, "cube");
 
-  const camera = new Camera();
+  const camera = new Camera(3, -2, 5, -35);
 
   const instances: ModelInstace[] = [];
+
+  let lastUpdate = Date.now();
 
   // for (let i = 0; i < 9; i++) {
   //   instances.push(new ModelInstance());
@@ -57,15 +63,19 @@ export default (canvasId: string) => {
   // }
 
   for (let i = 0; i < 9; i++) {
-    instances.push(new ModelInstance((i % 3) * 5, Math.floor(i / 3) * 5));
+    instances.push(new ModelInstance((i % 3) * 3, Math.floor(i / 3) * 3));
     modelRenderer.addInstance(instances[i], "cube");
   }
 
   const render = () => {
+    const now = Date.now();
+    const deltaTime = (now - lastUpdate) / 1000;
+    lastUpdate = now;
     GLM.clear(0, 0, 0, 1);
     instances.forEach((instance, i) => {
       instance.updateRotation(0.1 * i, 0.1 * i, 0.1 * i);
     });
+    camera.update(deltaTime);
     modelRenderer.render(light, camera);
     window.requestAnimationFrame(render);
   }

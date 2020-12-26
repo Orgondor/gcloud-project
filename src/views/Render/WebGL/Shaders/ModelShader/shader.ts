@@ -9,9 +9,11 @@ export default class ModelShader {
   program: WebGLProgram;
   positionAttribute: number;
   normalAttribute: number;
+  tangentAttribute: number;
   textureCoordsAttribute: number;
+  colorAttribute: number;
   diffuseTexture: WebGLUniformLocation;
-  hasDiffuseTexture: WebGLUniformLocation;
+  normalMapTexture: WebGLUniformLocation;
   transformationMatrix: WebGLUniformLocation;
   viewMatrix: WebGLUniformLocation;
   projectionMatrix: WebGLUniformLocation;
@@ -37,9 +39,11 @@ export default class ModelShader {
 
     this.positionAttribute = GLM.getAttributeLocation(program, Locations.POSITION);
     this.normalAttribute = GLM.getAttributeLocation(program, Locations.NORMAL);
+    this.tangentAttribute = GLM.getAttributeLocation(program, Locations.TANGENT);
     this.textureCoordsAttribute = GLM.getAttributeLocation(program, Locations.TEXTURE_COORDS);
+    this.colorAttribute = GLM.getAttributeLocation(program, Locations.VERTEX_COLOR);
     this.diffuseTexture = GLM.getUniformLocation(program, Locations.DIFFUSE_TEXTURE);
-    this.hasDiffuseTexture = GLM.getUniformLocation(program, Locations.HAS_DIFFUSE_TEXTURE);
+    this.normalMapTexture = GLM.getUniformLocation(program, Locations.NORMAL_MAP_TEXTURE);
     this.transformationMatrix = GLM.getUniformLocation(program, Locations.TRANSFORMATION_MATRIX);
     this.viewMatrix = GLM.getUniformLocation(program, Locations.VIEW_MATRIX);
     this.projectionMatrix = GLM.getUniformLocation(program, Locations.PROJECTION_MATRIX);
@@ -69,9 +73,19 @@ export default class ModelShader {
     GLM.pointToAttribute(this.normalAttribute, 3);
   }
 
+  enableTangents = () => {
+    GLM.enableVertexAttributeArray(this.tangentAttribute);
+    GLM.pointToAttribute(this.tangentAttribute, 3);
+  }
+
   enableTextureCoords = () => {
     GLM.enableVertexAttributeArray(this.textureCoordsAttribute);
     GLM.pointToAttribute(this.textureCoordsAttribute, 2);
+  }
+
+  enableColors = () => {
+    GLM.enableVertexAttributeArray(this.colorAttribute);
+    GLM.pointToAttribute(this.colorAttribute, 3);
   }
 
   enableTransformationMatrix = (matrix: mat4) => {

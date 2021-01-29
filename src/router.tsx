@@ -8,6 +8,7 @@ import {
 import { Menu } from 'semantic-ui-react';
 import Home from './views/Home';
 import Dwm from './views/Dwm/Dwm';
+import MTG from './views/MTG/MTG';
 import Render from './views/Render/Render';
 
 type ViewRoute = {
@@ -35,6 +36,12 @@ const routes: ViewRoute[] = [
     title: 'Dragon Warrior Monsters',
     url: '/dwm',
     Component: Dwm,
+  },
+  {
+    routeOrder: 3,
+    title: 'Magic: The Gathering',
+    url: '/mtg',
+    Component: MTG,
   },
 ]
 

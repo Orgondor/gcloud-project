@@ -1,10 +1,8 @@
-import * as React from 'react';
+import * as React from "react";
 
-type AppStateProps = {
-};
+type AppStateProps = Record<string, unknown>;
 
-const defaultProps: AppStateProps = {
-};
+const defaultProps: AppStateProps = {};
 
 const appStateContext = React.createContext<AppStateProps>(defaultProps);
 
@@ -14,13 +12,17 @@ export const useAppState = (): AppStateProps => {
   return React.useContext(appStateContext);
 };
 
-export const ProvideAppState: React.FunctionComponent<ProviderProps> = ({ children }) => {
+export const ProvideAppState: React.FunctionComponent<ProviderProps> = ({
+  children,
+}) => {
   const values = useProvideAppState();
-  return <appStateContext.Provider value={values}>{children}</appStateContext.Provider>;
+  return (
+    <appStateContext.Provider value={values}>
+      {children}
+    </appStateContext.Provider>
+  );
 };
 
 function useProvideAppState(): AppStateProps {
-
-  return {
-  };
+  return {};
 }

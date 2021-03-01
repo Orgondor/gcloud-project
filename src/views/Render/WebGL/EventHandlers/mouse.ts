@@ -1,11 +1,11 @@
 import GLM from "../GLManager/GLM";
 
 interface DragEventListener {
-  ondrag: (dx: number, dy: number) => any
+  ondrag: (dx: number, dy: number) => any;
 }
 
 interface WheelEventListener {
-  onwheel: (e: WheelEvent) => any
+  onwheel: (e: WheelEvent) => any;
 }
 
 class MouseListener {
@@ -25,18 +25,18 @@ class MouseListener {
     GLM.gl.canvas.onwheel = (e: WheelEvent) => {
       this.onWheelListeners.forEach((listener) => {
         listener.onwheel(e);
-      })
-    }
+      });
+    };
 
     GLM.gl.canvas.onmousedown = (e: MouseEvent) => {
       x = e.clientX;
       y = e.clientY;
       dragging = true;
-    }
+    };
 
     GLM.gl.canvas.onmouseup = (e: MouseEvent) => {
       dragging = false;
-    }
+    };
 
     GLM.gl.canvas.onmousemove = (e: MouseEvent) => {
       if (dragging) {
@@ -46,18 +46,18 @@ class MouseListener {
         y = e.clientY;
         this.onDragListeners.forEach((listener) => {
           listener.ondrag(dx, dy);
-        })
+        });
       }
-    }
-  }
+    };
+  };
 
   subscribeToDrag = (listener: DragEventListener) => {
     this.onDragListeners.push(listener);
-  }
+  };
 
   subscribeToWheel = (listener: WheelEventListener) => {
     this.onWheelListeners.push(listener);
-  }
+  };
 }
 
 const MouseEvent = new MouseListener();

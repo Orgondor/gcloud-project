@@ -1,10 +1,10 @@
-import GLM from "../GLManager/GLM"
+import GLM from "../GLManager/GLM";
 
 export default class Texture {
   texture: WebGLTexture;
   done: boolean;
 
-  constructor(isNormalMap = false){
+  constructor(isNormalMap = false) {
     this.done = false;
     this.texture = GLM.createTexture();
     GLM.bindTexture(this.texture);
@@ -20,7 +20,7 @@ export default class Texture {
     img.setAttribute("crossOrigin", "");
     img.onload = () => this.onLoad(img);
     img.src = url;
-  }
+  };
 
   onLoad = (img: TexImageSource) => {
     GLM.bindTexture(this.texture);
@@ -31,7 +31,7 @@ export default class Texture {
       GLM.textureNoPowerOfTwo();
     }
     this.done = true;
-  }
+  };
 
   isPowerOfTwo = (side: number) => (side & (side - 1)) === 0;
   enable = () => GLM.bindTexture(this.texture);

@@ -1,78 +1,75 @@
-import * as React from 'react';
-import {
-  BrowserRouter,
-  Switch,
-  Route,
-  Link
-} from 'react-router-dom';
-import { Menu } from 'semantic-ui-react';
-import Home from './views/Home';
-import Dwm from './views/Dwm/Dwm';
-import MTG from './views/MTG/MTG';
-import Render from './views/Render/Render';
+import * as React from "react";
+import { BrowserRouter, Switch, Route, Link } from "react-router-dom";
+import { Menu } from "semantic-ui-react";
+import NavMenu from "./NavMenu";
+import Home from "./views/Home";
+import Dwm from "./views/Dwm/Dwm";
+import MTG from "./views/MTG/MTG";
+import Render from "./views/Render/Render";
 
-type ViewRoute = {
-  routeOrder: number,
-  title: string,
-  url: string,
-  Component: () => JSX.Element,
-}
+export type ViewRoute = {
+  title: string;
+  url: string;
+  Component: () => JSX.Element;
+  exact: boolean;
+};
 
 const routes: ViewRoute[] = [
   {
-    routeOrder: 9,
-    title: 'Home',
-    url: '/',
+    title: "Home",
+    url: "/",
     Component: Home,
+    exact: true,
   },
   {
-    routeOrder: 1,
-    title: 'Render',
-    url: '/render',
+    title: "Render",
+    url: "/render",
     Component: Render,
+    exact: false,
   },
   {
-    routeOrder: 2,
-    title: 'Dragon Warrior Monsters',
-    url: '/dwm',
+    title: "Dragon Warrior Monsters",
+    url: "/dwm",
     Component: Dwm,
+    exact: false,
   },
-  {
-    routeOrder: 3,
-    title: 'Magic: The Gathering',
-    url: '/mtg',
-    Component: MTG,
-  },
-]
+  // {
+  //   title: "Magic: The Gathering",
+  //   url: "/mtg",
+  //   Component: MTG,
+  //   exact: false,
+  // },
+];
 
-const Router = () => {
+const Router = (): JSX.Element => {
   return (
     <BrowserRouter>
       <div>
-        <nav>
-          <Menu stackable >
-            {routes.map((r, i) => (
-              <Menu.Item key={i} as={Link} name={r.title} to={r.url} >
-                {r.title}
-              </Menu.Item>
-            ))}
-            <Menu.Item as={'a'} href='http://github.com/orgondor' icon='github' position='right' />
-          </Menu>
-        </nav>
+        <NavMenu routes={routes} />
 
         {/* A <Switch> looks through its children <Route>s and
             renders the first one that matches the current URL. */}
-        <div style={{maxWidth: '1216px', marginLeft: 'auto', marginRight: 'auto'}}>
+        <div
+          style={{
+            maxWidth: "1216px",
+            marginLeft: "auto",
+            marginRight: "auto",
+          }}
+        >
           <Switch>
-            {routes.sort((a, b) => a.routeOrder - b.routeOrder).map(({title, url, Component}, i) => {
-              return (
-              <Route key={i} path={url} render={() => <Component />} />
-            )})}
+            {routes.map(({ url, Component, exact }, i) => (
+              <Route
+                exact={exact}
+                key={i}
+                path={url}
+                render={() => <Component />}
+              />
+            ))}
           </Switch>
         </div>
       </div>
     </BrowserRouter>
-  )
-}
+  );
+};
 
-export default Router
+export default Router;

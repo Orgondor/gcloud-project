@@ -12,4 +12,4 @@ export default {
   LIGHT_COLOR: "lightColor",
   LIGHT_AMBIENT: "lightAmbient",
   VERTEX_COLOR: "vertexColor",
-}
+};

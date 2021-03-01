@@ -11,7 +11,7 @@ export default class ModelInstace {
   scale: number;
   transformationMatrix: mat4;
 
-  constructor(x: number = 0, y: number = 0, z: number = 0, pitch: number = 0, yaw: number = 0, roll: number = 0, scale: number = 1) {
+  constructor(x = 0, y = 0, z = 0, pitch = 0, yaw = 0, roll = 0, scale = 1) {
     this.x = x;
     this.y = y;
     this.z = z;
@@ -26,19 +26,19 @@ export default class ModelInstace {
     this.y += y;
     this.z += z;
     this.updateTransformationMatrix();
-  }
+  };
 
   updateRotation = (pitch: number, yaw: number, roll: number) => {
     this.pitch += pitch;
     this.yaw += yaw;
     this.roll += roll;
     this.updateTransformationMatrix();
-  }
-  
+  };
+
   updateScale = (scale: number) => {
     this.scale += scale;
     this.updateTransformationMatrix();
-  }
+  };
 
   updateTransformationMatrix = () => {
     this.transformationMatrix = createTransformationMatrix(
@@ -49,8 +49,8 @@ export default class ModelInstace {
       this.yaw,
       this.roll,
       this.scale
-    )
-  }
+    );
+  };
 
   getTransformationMatrix = () => this.transformationMatrix;
 }

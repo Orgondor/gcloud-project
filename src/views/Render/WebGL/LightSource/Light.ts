@@ -9,13 +9,21 @@ export default class Light {
   b: number;
   ambient: number;
 
-  constructor(x: number, y: number, z: number, r: number, g: number, b: number, ambient: number) {
-    this.x = x; 
-    this.y = y; 
-    this.z = z; 
-    this.r = r; 
-    this.g = g; 
-    this.b = b; 
+  constructor(
+    x: number,
+    y: number,
+    z: number,
+    r: number,
+    g: number,
+    b: number,
+    ambient: number
+  ) {
+    this.x = x;
+    this.y = y;
+    this.z = z;
+    this.r = r;
+    this.g = g;
+    this.b = b;
     this.ambient = ambient;
   }
 

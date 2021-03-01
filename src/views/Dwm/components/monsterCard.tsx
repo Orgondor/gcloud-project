@@ -1,24 +1,23 @@
-import * as React from 'react';
-import sprites from '../../../images/sprites/*.png';
-import './dwmTypes';
+import * as React from "react";
+import { Card, Image } from "semantic-ui-react";
+import { Monster } from "./dwmTypes";
 
-import {
-  Card,
-  Image,
-} from 'semantic-ui-react';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const sprites = require("../../../images/sprites/*.png") as Record<
+  string,
+  string
+>;
 
-const MonsterCard = ({monster, onClick}: {
-  monster: Monster,
-  onClick: (monster: Monster) => unknown,
-}) => (
-  <div style={{width: '150px', padding: '5px'}}>
+type MonsterCardParams = {
+  monster: Monster;
+  onClick: (monster: Monster) => unknown;
+};
+
+const MonsterCard = ({ monster, onClick }: MonsterCardParams): JSX.Element => (
+  <div style={{ width: "150px", padding: "5px" }}>
     <Card onClick={() => onClick(monster)}>
-      <div style={{height: '100px', display: 'flex', alignItems: 'center'}}>
-        <Image
-          src={sprites[`${monster.name}`]}
-          size='tiny'
-          centered
-        />
+      <div style={{ height: "100px", display: "flex", alignItems: "center" }}>
+        <Image src={sprites[`${monster.name}`]} size="tiny" centered />
       </div>
       <Card.Content>
         <Card.Header textAlign="center">{monster.name}</Card.Header>

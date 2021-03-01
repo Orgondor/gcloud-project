@@ -9,11 +9,11 @@ import Camera from "../Camera/camera";
 type Model = {
   type: ModelType;
   instances: ModelInstance[];
-}
+};
 
 export default class ModelRenderer {
   shader: Shader;
-  models: { [index: string] : Model };
+  models: { [index: string]: Model };
 
   constructor() {
     this.shader = new Shader();
@@ -25,18 +25,18 @@ export default class ModelRenderer {
       this.models[id] = {
         type: model,
         instances: [],
-      }
+      };
     }
-  }
+  };
 
   addInstance = (instance: ModelInstance, id: string) => {
     this.models[id].instances.push(instance);
-  }
+  };
 
   preRender = () => {
     GLM.viewport();
     GLM.depthTest(true);
-  }
+  };
 
   render = (light: Light, camera: Camera) => {
     this.preRender();
@@ -44,11 +44,13 @@ export default class ModelRenderer {
     this.shader.enableLight(light);
     camera.enable(this.shader);
     Object.keys(this.models).forEach((model) => {
-      this.models[model].type.use(this.shader)
+      this.models[model].type.use(this.shader);
       this.models[model].instances.forEach((instance) => {
-        this.shader.enableTransformationMatrix(instance.getTransformationMatrix());
+        this.shader.enableTransformationMatrix(
+          instance.getTransformationMatrix()
+        );
         GLM.drawTriangles(this.models[model].type.indicies.length);
-      })
-    })
-  }
+      });
+    });
+  };
 }

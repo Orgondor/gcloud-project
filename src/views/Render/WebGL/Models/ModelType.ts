@@ -1,6 +1,6 @@
-import GLM from "../GLManager/GLM"
-import Shader from "../Shaders/ModelShader/shader"
-import Material from "../Materials/material"
+import GLM from "../GLManager/GLM";
+import Shader from "../Shaders/ModelShader/shader";
+import Material from "../Materials/material";
 
 export default class ModelType {
   verticies: number[];
@@ -17,7 +17,14 @@ export default class ModelType {
   colorBuffer: WebGLBuffer;
   material: Material;
 
-  constructor(verticies: number[], indicies: number[], normals: number[], tangents: number[], textureCoords: number[], colors: number[]) {
+  constructor(
+    verticies: number[],
+    indicies: number[],
+    normals: number[],
+    tangents: number[],
+    textureCoords: number[],
+    colors: number[]
+  ) {
     this.verticies = verticies;
     this.indicies = indicies;
     this.normals = normals;
@@ -38,46 +45,46 @@ export default class ModelType {
     GLM.bindArrayBufer(this.vertexBuffer);
     GLM.addArrayBufferData(this.verticies);
     GLM.unbindArrayBufer();
-  }
+  };
 
   _genIndexBuffer = () => {
     this.indexBuffer = GLM.createBuffer();
     GLM.bindElementArrayBufer(this.indexBuffer);
     GLM.addElementArrayBufferData(this.indicies);
     GLM.unbindElementArrayBufer();
-  }
+  };
 
   _genNormalBuffer = () => {
     this.normalBuffer = GLM.createBuffer();
     GLM.bindArrayBufer(this.normalBuffer);
     GLM.addArrayBufferData(this.normals);
     GLM.unbindArrayBufer();
-  }
+  };
 
   _genTangentBuffer = () => {
     this.tangentBuffer = GLM.createBuffer();
     GLM.bindArrayBufer(this.tangentBuffer);
     GLM.addArrayBufferData(this.tangents);
     GLM.unbindArrayBufer();
-  }
+  };
 
   _genTextureCoordBuffer = () => {
     this.textureCoordBuffer = GLM.createBuffer();
     GLM.bindArrayBufer(this.textureCoordBuffer);
     GLM.addArrayBufferData(this.textureCoords);
     GLM.unbindArrayBufer();
-  }
+  };
 
   _genColorBuffer = () => {
     this.colorBuffer = GLM.createBuffer();
     GLM.bindArrayBufer(this.colorBuffer);
     GLM.addArrayBufferData(this.colors);
     GLM.unbindArrayBufer();
-  }
+  };
 
   addMaterial = (material: Material) => {
     this.material = material;
-  }
+  };
 
   use = (shader: Shader) => {
     GLM.bindArrayBufer(this.vertexBuffer);
@@ -92,5 +99,5 @@ export default class ModelType {
     this.material.enable(shader);
     GLM.bindArrayBufer(this.colorBuffer);
     shader.enableColors();
-  }
+  };
 }

@@ -16,19 +16,19 @@ class KeyListener {
     GLM.gl.canvas.onkeydown = (e: KeyboardEvent) => {
       this.onKeyListeners.forEach((listener) => {
         listener.onkeydown(e);
-      })
-    }
+      });
+    };
 
     GLM.gl.canvas.onkeyup = (e: KeyboardEvent) => {
       this.onKeyListeners.forEach((listener) => {
         listener.onkeyup(e);
-      })
-    }
-  }
+      });
+    };
+  };
 
   subscribeToKey = (listener: KeyEventListener) => {
     this.onKeyListeners.push(listener);
-  }
+  };
 }
 
 const KeyEvent = new KeyListener();

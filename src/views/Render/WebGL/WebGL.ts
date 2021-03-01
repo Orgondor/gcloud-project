@@ -1,19 +1,25 @@
-import * as React from 'react';
+import * as React from "react";
 import GLM from "./GLManager/GLM";
 import ModelRenderer from "./Renderer/ModelRenderer";
 import ModelType from "./Models/ModelType";
 import ModelInstance from "./Models/ModelInstance";
-import cube from "./Models/cube"
-import Light from "./LightSource/Light"
-import Material from "./Materials/material"
+import cube from "./Models/cube";
+import Light from "./LightSource/Light";
+import Material from "./Materials/material";
 import Camera from "./Camera/camera";
 import MouseEvent from "./EventHandlers/mouse";
 import KeyEvent from "./EventHandlers/keyboard";
-import diffuse from "../../../images/sexkaitb_2K_Albedo.jpg";
-import normalMap from "../../../images/sexkaitb_2K_Normal.jpg";
-import ModelInstace from './Models/ModelInstance';
+import ModelInstace from "./Models/ModelInstance";
+// import diffuse from "../../../images/sexkaitb_2K_Albedo.jpg";
+// import normalMap from "../../../images/sexkaitb_2K_Normal.jpg";
 
-export default (canvasId: string) => {
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const diffuse = require("../../../images/sexkaitb_2K_Albedo.jpg") as string;
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const normalMap = require("../../../images/sexkaitb_2K_Normal.jpg") as string;
+
+export default (canvasId: string): void => {
   const canvas = document.getElementById(canvasId);
   if (!canvas) {
     console.error("Failed to find canvas component with id:", canvasId);
@@ -34,7 +40,7 @@ export default (canvasId: string) => {
   const gl = canvas.getContext("webgl2");
 
   if (!gl) {
-    console.error("Failed to get webgl context")
+    console.error("Failed to get webgl context");
     return;
   }
 
@@ -47,7 +53,14 @@ export default (canvasId: string) => {
   const material = new Material();
   material.addDiffuse(diffuse);
   material.addNormalMap(normalMap);
-  const modelType = new ModelType(cube.vertices, cube.indices, cube.normals, cube.tangents, cube.textureCoords, cube.colors);
+  const modelType = new ModelType(
+    cube.vertices,
+    cube.indices,
+    cube.normals,
+    cube.tangents,
+    cube.textureCoords,
+    cube.colors
+  );
   modelType.addMaterial(material);
   modelRenderer.registerNewModel(modelType, "cube");
 
@@ -78,7 +91,7 @@ export default (canvasId: string) => {
     camera.update(deltaTime);
     modelRenderer.render(light, camera);
     window.requestAnimationFrame(render);
-  }
+  };
 
   window.requestAnimationFrame(render);
-}
+};

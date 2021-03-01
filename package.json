@@ -6,10 +6,14 @@
   "author": "Orgondor <maxlindgren@live.com>",
   "license": "MIT",
   "scripts": {
+    "prestart": "rimraf dist && rimraf .cache",
     "start": "yarn parcel src/index.html",
     "prepare": "cp app.yaml dist/app.yaml & cp main.py dist/main.py",
+    "predeploy": "cp app.yaml dist/app.yaml & cp main.py dist/main.py",
     "deploy": "gcloud app deploy --project=maxlindgren --version=1",
-    "browse": "gcloud app browse --project=maxlindgren"
+    "browse": "gcloud app browse --project=maxlindgren",
+    "lint": "eslint '*/**/*.{js,jsx,ts,tsx}'",
+    "lint:fix": "yarn lint --quiet --fix"
   },
   "dependencies": {
     "axios": "^0.21.1",
@@ -17,6 +21,7 @@
     "qs": "^6.9.6",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
+    "react-responsive": "^8.2.0",
     "react-router-dom": "^5.2.0",
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^2.0.1",
@@ -29,8 +34,16 @@
     "@types/qs": "^6.9.5",
     "@types/react": "^16.9.55",
     "@types/react-dom": "^16.9.9",
+    "@types/react-responsive": "^8.0.2",
     "@types/react-router-dom": "^5.1.6",
     "@types/websql": "^0.0.27",
-    "parcel-bundler": "^1.12.4"
+    "@typescript-eslint/eslint-plugin": "^4.15.2",
+    "@typescript-eslint/parser": "^4.15.2",
+    "eslint": "^7.20.0",
+    "eslint-config-prettier": "^8.1.0",
+    "eslint-plugin-prettier": "^3.3.1",
+    "parcel-bundler": "^1.12.4",
+    "prettier": "^2.2.1",
+    "rimraf": "^3.0.2"
   }
 }

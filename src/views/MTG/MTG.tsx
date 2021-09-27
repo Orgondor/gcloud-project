@@ -3,77 +3,21 @@ import qs from "qs";
 import axios, { AxiosResponse } from "axios";
 import { useAppState } from "../../hooks/useAppState";
 
+import { Button, Form, Input, Image, Segment } from "semantic-ui-react";
 import {
-  Button,
-  Card,
-  Form,
-  Input,
-  Image,
-  Segment,
-  Label,
-  Grid,
-  Sticky,
-} from "semantic-ui-react";
+  CardList,
+  CardListEntry,
+  MTGContentContainer,
+} from "./components/styled";
+import { getCardImageURIs } from "./util";
+import { SearchData } from "./types";
+import CardNavigationImage from "./components/CardNavigationImage";
 
-type ImageURIs = {
-  small: string;
-  medium: string;
-  large: string;
-  png: string;
-  art_crop: string;
-  border_crop: string;
-};
-
-type CardFace = {
-  image_uris: ImageURIs;
-};
-
-type CardData = {
-  id: string;
-  name: string;
-  image_uris?: ImageURIs;
-  card_faces?: CardFace[];
-};
-
-type SearchData = {
-  object: string;
-  total_cards: number;
-  has_more: boolean;
-  next_page?: string;
-  data: CardData[];
-};
-
-const CardImage = (props: {
-  card: CardData;
-  onClick: (image_uris: ImageURIs) => unknown;
-}) => {
-  const { card, onClick } = props;
-  const image_uris =
-    card.image_uris || (card.card_faces && card.card_faces[0].image_uris);
-  const clickFunc = image_uris
-    ? onClick
-    : (image_uris: ImageURIs) => {
-        return;
-      };
-  return (
-    <Card onClick={() => clickFunc(image_uris)}>
-      {image_uris ? (
-        <Image wrapped ui={false} src={image_uris.small} centered />
-      ) : (
-        <Image wrapped ui={false} centered>
-          {card.name}
-          <Label content="Image not found!" icon="warning" />
-        </Image>
-      )}
-    </Card>
-  );
-};
-
-const MTG = () => {
+const MTG: React.FC = () => {
   const appState = useAppState();
 
   // test string:  c:red pow=3 o="attacks" cmc=3
-  const [search, setSearch] = React.useState("");
+  const [search, setSearch] = React.useState(`o:"token" cmc:5 color:w`);
   const [list, setList] = React.useState<SearchData>({
     object: "list",
     total_cards: 0,
@@ -81,9 +25,7 @@ const MTG = () => {
     data: [],
   });
   const [error, setError] = React.useState<AxiosResponse<any>>(undefined);
-  const [currentImage, setCurrentImage] = React.useState("");
-
-  const contextRef = React.useRef(null);
+  const [currentCard, setCurrentCard] = React.useState(0);
 
   const setQuery = (search: string) => {
     setSearch(search);
@@ -92,6 +34,7 @@ const MTG = () => {
   const doSearch = () => {
     console.log(search);
     fetchList();
+    setCurrentCard(0);
   };
 
   const fetchList = async () => {
@@ -116,6 +59,13 @@ const MTG = () => {
     console.log("New data:", list);
   }, [list]);
 
+  React.useEffect(() => {
+    doSearch();
+  }, []);
+
+  const card = list.data[currentCard];
+  console.log("current card:", card);
+
   return (
     <Segment>
       <Form>
@@ -135,34 +85,41 @@ const MTG = () => {
             {JSON.stringify(error)}
           </div>
         ) : (
-          <div ref={contextRef}>
-            <Grid>
-              <Grid.Column width={3}>
-                <Card.Group stackable>
-                  {list.data.map((card, i) => {
-                    return (
-                      <div
-                        key={card.id}
-                        style={{ width: "150px", padding: "2px" }}
-                      >
-                        <CardImage
-                          card={card}
-                          onClick={(image_uris) => {
-                            setCurrentImage(image_uris.png);
-                          }}
-                        />
-                      </div>
-                    );
-                  })}
-                </Card.Group>
-              </Grid.Column>
-              <Grid.Column width={10}>
-                <Sticky context={contextRef} offset={50}>
-                  <Image src={currentImage} centered />
-                </Sticky>
-              </Grid.Column>
-            </Grid>
-          </div>
+          <MTGContentContainer>
+            <CardList>
+              {list.data.map((card, i) => {
+                return (
+                  <CardListEntry
+                    key={card.id}
+                    onClick={() => {
+                      setCurrentCard(i);
+                    }}
+                  >
+                    {card.name}
+                  </CardListEntry>
+                );
+              })}
+            </CardList>
+            <CardNavigationImage
+              index={currentCard - 1}
+              card={list.data[currentCard - 1]}
+              onClick={(index) => {
+                setCurrentCard(index);
+              }}
+            />
+            <div style={{ width: "auto" }}>
+              {card ? (
+                <Image src={getCardImageURIs(card).large} centered />
+              ) : null}
+            </div>
+            <CardNavigationImage
+              index={currentCard + 1}
+              card={list.data[currentCard + 1]}
+              onClick={(index) => {
+                setCurrentCard(index);
+              }}
+            />
+          </MTGContentContainer>
         )}
       </Segment>
     </Segment>

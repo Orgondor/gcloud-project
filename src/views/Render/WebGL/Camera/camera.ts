@@ -1,12 +1,18 @@
 import { vec3, vec4, mat4 } from "gl-matrix";
 import { toRadians } from "../Utils/math";
 import GLM from "../GLManager/GLM";
-import Shader from "../Shaders/ModelShader/shader";
 import MouseEvent from "../EventHandlers/mouse";
 import KeyEvent from "../EventHandlers/keyboard";
 
 const maxZoomInFOV = 10;
 const maxZoomOutFOV = 80;
+
+interface CameraShader {
+  enableViewProjectionMatrices: (
+    viewMatrix: mat4,
+    projectionMatrix: mat4
+  ) => void;
+}
 
 export default class Camera {
   x: number;
@@ -105,7 +111,7 @@ export default class Camera {
     this.generateMatrices();
   };
 
-  enable = (shader: Shader) => {
+  enable = (shader: CameraShader) => {
     shader.enableViewProjectionMatrices(this.viewMatrix, this.projectionMatrix);
   };
 

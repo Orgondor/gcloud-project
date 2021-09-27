@@ -6,6 +6,7 @@ import Home from "./views/Home";
 import Dwm from "./views/Dwm/Dwm";
 import MTG from "./views/MTG/MTG";
 import Render from "./views/Render/Render";
+import QuadRender from "./views/Render/QuadRender";
 
 export type ViewRoute = {
   title: string;
@@ -25,6 +26,12 @@ const routes: ViewRoute[] = [
     title: "Render",
     url: "/render",
     Component: Render,
+    exact: false,
+  },
+  {
+    title: "Ray Marching",
+    url: "/raymarching",
+    Component: QuadRender,
     exact: false,
   },
   {

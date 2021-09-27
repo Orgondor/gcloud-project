@@ -10,6 +10,7 @@ import Camera from "./Camera/camera";
 import MouseEvent from "./EventHandlers/mouse";
 import KeyEvent from "./EventHandlers/keyboard";
 import ModelInstace from "./Models/ModelInstance";
+import { vec3 } from "gl-matrix";
 // import diffuse from "../../../images/sexkaitb_2K_Albedo.jpg";
 // import normalMap from "../../../images/sexkaitb_2K_Normal.jpg";
 
@@ -49,7 +50,7 @@ export default (canvasId: string): void => {
   KeyEvent.init();
 
   const modelRenderer = new ModelRenderer();
-  const light = new Light(100, -100, 100, 1.0, 1.0, 1.0, 0.3);
+  const light = new Light(0, -100, 0, 1.0, 1.0, 1.0, 0.3);
   const material = new Material();
   material.addDiffuse(diffuse);
   material.addNormalMap(normalMap);
@@ -57,8 +58,8 @@ export default (canvasId: string): void => {
     cube.vertices,
     cube.indices,
     cube.normals,
-    cube.tangents,
     cube.textureCoords,
+    cube.tangents,
     cube.colors
   );
   modelType.addMaterial(material);
@@ -68,7 +69,8 @@ export default (canvasId: string): void => {
 
   const instances: ModelInstace[] = [];
 
-  let lastUpdate = Date.now();
+  const startTime = Date.now() / 1000;
+  let lastUpdate = startTime;
 
   // for (let i = 0; i < 9; i++) {
   //   instances.push(new ModelInstance());
@@ -81,10 +83,17 @@ export default (canvasId: string): void => {
   }
 
   const render = () => {
-    const now = Date.now();
-    const deltaTime = (now - lastUpdate) / 1000;
+    const now = Date.now() / 1000;
+    const deltaTime = now - lastUpdate;
+    const uptime = now - startTime;
     lastUpdate = now;
     GLM.clear(0, 0, 0, 1);
+    const newLightpos = vec3.fromValues(
+      Math.sin(uptime) * 200,
+      Math.cos(uptime) * 200,
+      200 + Math.sin(uptime * 0.3) * 100
+    );
+    light.setPosition(newLightpos);
     instances.forEach((instance, i) => {
       instance.updateRotation(0.1 * i, 0.1 * i, 0.1 * i);
     });

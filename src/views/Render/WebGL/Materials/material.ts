@@ -1,6 +1,10 @@
 import Texture from "./texture";
 import GLM from "../GLManager/GLM";
-import Shader from "../Shaders/ModelShader/shader";
+
+interface MaterialShader {
+  diffuseTexture?: WebGLUniformLocation;
+  normalMapTexture?: WebGLUniformLocation;
+}
 
 export default class Material {
   diffuse: Texture;
@@ -21,19 +25,23 @@ export default class Material {
     return this;
   };
 
-  _enableDiffuse = (shader: Shader) => {
-    GLM.activeTexture(0);
-    this.diffuse.enable();
-    GLM.uploadInt(shader.diffuseTexture, 0);
+  _enableDiffuse = (shader: MaterialShader) => {
+    if (shader.diffuseTexture) {
+      GLM.activeTexture(0);
+      this.diffuse.enable();
+      GLM.uploadInt(shader.diffuseTexture, 0);
+    }
   };
 
-  _enableNormalMap = (shader: Shader) => {
-    GLM.activeTexture(1);
-    this.normalMap.enable();
-    GLM.uploadInt(shader.normalMapTexture, 1);
+  _enableNormalMap = (shader: MaterialShader) => {
+    if (shader.normalMapTexture) {
+      GLM.activeTexture(1);
+      this.normalMap.enable();
+      GLM.uploadInt(shader.normalMapTexture, 1);
+    }
   };
 
-  enable = (shader: Shader) => {
+  enable = (shader: MaterialShader) => {
     this._enableDiffuse(shader);
     this._enableNormalMap(shader);
   };

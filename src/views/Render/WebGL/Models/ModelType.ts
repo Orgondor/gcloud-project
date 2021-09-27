@@ -1,6 +1,15 @@
 import GLM from "../GLManager/GLM";
-import Shader from "../Shaders/ModelShader/shader";
 import Material from "../Materials/material";
+
+interface ModelShader {
+  enablePosition: () => void;
+  enableTextureCoords: () => void;
+  enableNormals: () => void;
+  enableTangents: () => void;
+  enableColors: () => void;
+  diffuseTexture?: WebGLUniformLocation;
+  normalMapTexture?: WebGLUniformLocation;
+}
 
 export default class ModelType {
   verticies: number[];
@@ -12,92 +21,102 @@ export default class ModelType {
   vertexBuffer: WebGLBuffer;
   indexBuffer: WebGLBuffer;
   normalBuffer: WebGLBuffer;
-  tangentBuffer: WebGLBuffer;
   textureCoordBuffer: WebGLBuffer;
-  colorBuffer: WebGLBuffer;
-  material: Material;
+  tangentBuffer: WebGLBuffer | undefined;
+  colorBuffer: WebGLBuffer | undefined;
+  material: Material | undefined;
 
   constructor(
     verticies: number[],
     indicies: number[],
     normals: number[],
-    tangents: number[],
     textureCoords: number[],
-    colors: number[]
+    tangents?: number[],
+    colors?: number[]
   ) {
     this.verticies = verticies;
     this.indicies = indicies;
     this.normals = normals;
-    this.tangents = tangents;
     this.textureCoords = textureCoords;
+    this.tangents = tangents;
     this.colors = colors;
     this._genVertexBuffer();
     this._genIndexBuffer();
     this._genNormalBuffer();
-    this._genTangentBuffer();
     this._genTextureCoordBuffer();
+    this._genTangentBuffer();
     this._genColorBuffer();
     this.material = new Material();
   }
 
-  _genVertexBuffer = () => {
+  _genVertexBuffer = (): void => {
     this.vertexBuffer = GLM.createBuffer();
     GLM.bindArrayBufer(this.vertexBuffer);
     GLM.addArrayBufferData(this.verticies);
     GLM.unbindArrayBufer();
   };
 
-  _genIndexBuffer = () => {
+  _genIndexBuffer = (): void => {
     this.indexBuffer = GLM.createBuffer();
     GLM.bindElementArrayBufer(this.indexBuffer);
     GLM.addElementArrayBufferData(this.indicies);
     GLM.unbindElementArrayBufer();
   };
 
-  _genNormalBuffer = () => {
+  _genNormalBuffer = (): void => {
     this.normalBuffer = GLM.createBuffer();
     GLM.bindArrayBufer(this.normalBuffer);
     GLM.addArrayBufferData(this.normals);
     GLM.unbindArrayBufer();
   };
 
-  _genTangentBuffer = () => {
-    this.tangentBuffer = GLM.createBuffer();
-    GLM.bindArrayBufer(this.tangentBuffer);
-    GLM.addArrayBufferData(this.tangents);
-    GLM.unbindArrayBufer();
-  };
-
-  _genTextureCoordBuffer = () => {
+  _genTextureCoordBuffer = (): void => {
     this.textureCoordBuffer = GLM.createBuffer();
     GLM.bindArrayBufer(this.textureCoordBuffer);
     GLM.addArrayBufferData(this.textureCoords);
     GLM.unbindArrayBufer();
   };
 
-  _genColorBuffer = () => {
-    this.colorBuffer = GLM.createBuffer();
-    GLM.bindArrayBufer(this.colorBuffer);
-    GLM.addArrayBufferData(this.colors);
-    GLM.unbindArrayBufer();
+  _genTangentBuffer = (): void => {
+    if (this.tangents) {
+      this.tangentBuffer = GLM.createBuffer();
+      GLM.bindArrayBufer(this.tangentBuffer);
+      GLM.addArrayBufferData(this.tangents);
+      GLM.unbindArrayBufer();
+    }
   };
 
-  addMaterial = (material: Material) => {
+  _genColorBuffer = (): void => {
+    if (this.colors) {
+      this.colorBuffer = GLM.createBuffer();
+      GLM.bindArrayBufer(this.colorBuffer);
+      GLM.addArrayBufferData(this.colors);
+      GLM.unbindArrayBufer();
+    }
+  };
+
+  addMaterial = (material: Material): void => {
     this.material = material;
   };
 
-  use = (shader: Shader) => {
+  use = (shader: ModelShader): void => {
     GLM.bindArrayBufer(this.vertexBuffer);
     shader.enablePosition();
     GLM.bindArrayBufer(this.textureCoordBuffer);
     shader.enableTextureCoords();
     GLM.bindArrayBufer(this.normalBuffer);
     shader.enableNormals();
-    GLM.bindArrayBufer(this.tangentBuffer);
-    shader.enableTangents();
     GLM.bindElementArrayBufer(this.indexBuffer);
-    this.material.enable(shader);
-    GLM.bindArrayBufer(this.colorBuffer);
-    shader.enableColors();
+    if (this.material) {
+      this.material.enable(shader);
+    }
+    if (this.tangentBuffer) {
+      GLM.bindArrayBufer(this.tangentBuffer);
+      shader.enableTangents();
+    }
+    if (this.colorBuffer) {
+      GLM.bindArrayBufer(this.colorBuffer);
+      shader.enableColors();
+    }
   };
 }

@@ -1,8 +1,7 @@
 import GLM from "../GLManager/GLM";
-import Shader from "../Shaders/ModelShader/shader";
+import Shader from "../Shaders/QuadShader/shader";
 import ModelType from "../Models/ModelType";
 import ModelInstance from "../Models/ModelInstance";
-import Light from "../LightSource/Light";
 import Camera from "../Camera/camera";
 
 type Model = {
@@ -37,11 +36,11 @@ export default class ModelRenderer {
     GLM.depthTest(true);
   };
 
-  render = (light: Light, camera: Camera) => {
+  render = (camera: Camera, uptime: number, deltaTime: number) => {
     this.preRender();
     this.shader.use();
-    this.shader.enableLight(light);
     camera.enable(this.shader);
+    this.shader.enableTime(uptime, deltaTime);
     Object.keys(this.models).forEach((model) => {
       this.models[model].type.use(this.shader);
       this.models[model].instances.forEach((instance) => {

@@ -7,7 +7,7 @@ import quad from "./Models/quad";
 import Camera from "./Camera/camera";
 import MouseEvent from "./EventHandlers/mouse";
 import KeyEvent from "./EventHandlers/keyboard";
-import ModelInstace from "./Models/ModelInstance";
+import { QuadShader } from "./Shaders/QuadShader/shader";
 // import diffuse from "../../../images/sexkaitb_2K_Albedo.jpg";
 // import normalMap from "../../../images/sexkaitb_2K_Normal.jpg";
 
@@ -37,8 +37,8 @@ export default (canvasId: string): void => {
   }
 
   GLM.init(gl);
-  // MouseEvent.init();
-  // KeyEvent.init();
+  MouseEvent.init();
+  KeyEvent.init();
 
   const modelRenderer = new QuadRenderer();
   const modelType = new ModelType(
@@ -47,16 +47,22 @@ export default (canvasId: string): void => {
     quad.normals,
     quad.textureCoords
   );
-  modelRenderer.registerNewModel(modelType, "quad");
+  modelRenderer.registerNewModel(modelType, QuadShader.RayMarch, "quad");
+  modelRenderer.registerNewModel(modelType, QuadShader.Mandelbrot, "quad");
 
   const camera = new Camera(0, 0, 1.5);
 
   const startTime = Date.now() / 1000;
   let lastUpdate = startTime;
 
-  const instance = new ModelInstance();
-  instance.updateRotation(0, 0, 0);
-  modelRenderer.addInstance(instance, "quad");
+  const instance1 = new ModelInstance();
+  instance1.updateRotation(0, 0, 0);
+  modelRenderer.addInstance(instance1, QuadShader.RayMarch, "quad");
+
+  const instance2 = new ModelInstance();
+  instance2.updateRotation(0, 0, 0);
+  instance2.updatePosition(2.1, 0, 0);
+  modelRenderer.addInstance(instance2, QuadShader.Mandelbrot, "quad");
 
   const render = () => {
     const now = Date.now() / 1000;

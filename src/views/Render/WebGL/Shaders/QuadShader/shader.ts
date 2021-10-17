@@ -1,8 +1,18 @@
 import GLM from "../../GLManager/GLM";
 import VertexSource from "./vertex";
-import FragmentSource from "./fragment";
+import MandelbrotSource from "./mandelbrot_frag";
+import RayMarchSource from "./rayMarch_frag";
 import Locations from "./locations";
 import { mat4 } from "gl-matrix";
+
+export enum QuadShader {
+  Mandelbrot = "mandelbrot",
+  RayMarch = "raymarch",
+}
+const shaderMap: Record<QuadShader, string> = {
+  [QuadShader.Mandelbrot]: MandelbrotSource,
+  [QuadShader.RayMarch]: RayMarchSource,
+};
 
 export default class ModelShader {
   program: WebGLProgram;
@@ -15,20 +25,25 @@ export default class ModelShader {
   uptime: WebGLUniformLocation;
   deltaTime: WebGLUniformLocation;
 
-  constructor() {
+  constructor(shader: QuadShader) {
     const vertexShader = GLM.createVertexShader();
     GLM.addShaderSource(vertexShader, VertexSource);
     GLM.compileShader(vertexShader);
     this.compileStatus(vertexShader);
 
-    const fragmentShader = GLM.createFragmentShader();
-    GLM.addShaderSource(fragmentShader, FragmentSource);
-    GLM.compileShader(fragmentShader);
-    this.compileStatus(fragmentShader);
+    const fragShader = GLM.createFragmentShader();
+    GLM.addShaderSource(fragShader, shaderMap[shader]);
+    GLM.compileShader(fragShader);
+    this.compileStatus(fragShader);
+
+    const rayMarchShader = GLM.createFragmentShader();
+    GLM.addShaderSource(rayMarchShader, RayMarchSource);
+    GLM.compileShader(rayMarchShader);
+    this.compileStatus(rayMarchShader);
 
     const program = GLM.createShaderProgram();
     GLM.attachShaderProgram(program, vertexShader);
-    GLM.attachShaderProgram(program, fragmentShader);
+    GLM.attachShaderProgram(program, fragShader);
     GLM.linkProgram(program);
 
     this.positionAttribute = GLM.getAttributeLocation(

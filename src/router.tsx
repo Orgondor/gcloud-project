@@ -29,8 +29,8 @@ const routes: ViewRoute[] = [
     exact: false,
   },
   {
-    title: "Ray Marching",
-    url: "/raymarching",
+    title: "Shaders",
+    url: "/shaders",
     Component: QuadRender,
     exact: false,
   },

@@ -1,5 +1,5 @@
 import GLM from "../GLManager/GLM";
-import Shader from "../Shaders/QuadShader/shader";
+import Shader, { QuadShader } from "../Shaders/QuadShader/shader";
 import ModelType from "../Models/ModelType";
 import ModelInstance from "../Models/ModelInstance";
 import Camera from "../Camera/camera";
@@ -10,25 +10,31 @@ type Model = {
 };
 
 export default class ModelRenderer {
-  shader: Shader;
-  models: { [index: string]: Model };
+  shader: Record<QuadShader, Shader>;
+  models: Record<QuadShader, Record<string, Model>>;
 
   constructor() {
-    this.shader = new Shader();
-    this.models = {};
+    this.shader = {
+      [QuadShader.Mandelbrot]: new Shader(QuadShader.Mandelbrot),
+      [QuadShader.RayMarch]: new Shader(QuadShader.RayMarch),
+    };
+    this.models = {
+      [QuadShader.Mandelbrot]: {},
+      [QuadShader.RayMarch]: {},
+    };
   }
 
-  registerNewModel = (model: ModelType, id: string) => {
-    if (!this.models[id]) {
-      this.models[id] = {
+  registerNewModel = (model: ModelType, shader: QuadShader, id: string) => {
+    if (!this.models[shader][id]) {
+      this.models[shader][id] = {
         type: model,
         instances: [],
       };
     }
   };
 
-  addInstance = (instance: ModelInstance, id: string) => {
-    this.models[id].instances.push(instance);
+  addInstance = (instance: ModelInstance, shader: QuadShader, id: string) => {
+    this.models[shader][id].instances.push(instance);
   };
 
   preRender = () => {
@@ -38,16 +44,18 @@ export default class ModelRenderer {
 
   render = (camera: Camera, uptime: number, deltaTime: number) => {
     this.preRender();
-    this.shader.use();
-    camera.enable(this.shader);
-    this.shader.enableTime(uptime, deltaTime);
-    Object.keys(this.models).forEach((model) => {
-      this.models[model].type.use(this.shader);
-      this.models[model].instances.forEach((instance) => {
-        this.shader.enableTransformationMatrix(
-          instance.getTransformationMatrix()
-        );
-        GLM.drawTriangles(this.models[model].type.indicies.length);
+    Object.values(QuadShader).forEach((shaderId: QuadShader) => {
+      this.shader[shaderId].use();
+      camera.enable(this.shader[shaderId]);
+      this.shader[shaderId].enableTime(uptime, deltaTime);
+      Object.keys(this.models[shaderId]).forEach((id) => {
+        this.models[shaderId][id].type.use(this.shader[shaderId]);
+        this.models[shaderId][id].instances.forEach((instance) => {
+          this.shader[shaderId].enableTransformationMatrix(
+            instance.getTransformationMatrix()
+          );
+          GLM.drawTriangles(this.models[shaderId][id].type.indicies.length);
+        });
       });
     });
   };

@@ -18,10 +18,10 @@ export type SelectFamily = {
 export type Breeding = {
   resultId: number;
   parent1Id?: number;
-  parent1FamliyId?: number;
+  parent1FamilyId?: number;
   parent2Id?: number;
   parent2NeededPlus?: number;
-  parent2FamliyId?: number;
+  parent2FamilyId?: number;
 };
 
 export type ParentType = "monster" | "family";

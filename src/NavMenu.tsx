@@ -13,17 +13,19 @@ const menuItems = (
   onClick: () => unknown
 ): JSX.Element[] => {
   return [
-    ...routes.map((r, i) => (
-      <Menu.Item
-        key={`routes_${i}`}
-        as={Link}
-        name={r.title}
-        to={r.url}
-        onClick={onClick}
-      >
-        {r.title}
-      </Menu.Item>
-    )),
+    ...routes
+      .filter((route) => route.menu)
+      .map((r, i) => (
+        <Menu.Item
+          key={`routes_${i}`}
+          as={Link}
+          name={r.title}
+          to={r.url}
+          onClick={onClick}
+        >
+          {r.title}
+        </Menu.Item>
+      )),
     <Menu.Item
       key="github"
       as={"a"}

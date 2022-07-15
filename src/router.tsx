@@ -2,7 +2,7 @@ import * as React from "react";
 import { BrowserRouter, Switch, Route, Link } from "react-router-dom";
 import { Menu } from "semantic-ui-react";
 import NavMenu from "./NavMenu";
-import Home from "./views/Home";
+import BaseRedirect from "./views/BaseRedirect";
 import Dwm from "./views/Dwm/Dwm";
 import MTG from "./views/MTG/MTG";
 import Render from "./views/Render/Render";
@@ -11,48 +11,66 @@ import QuadRender from "./views/Render/QuadRender";
 export type ViewRoute = {
   title: string;
   url: string;
-  Component: () => JSX.Element;
+  Component: React.FC;
   exact: boolean;
+  menu: boolean;
 };
 
 const routes: ViewRoute[] = [
   {
-    title: "Home",
-    url: "/",
-    Component: Home,
-    exact: true,
+    title: "Shaders",
+    url: "/shaders",
+    Component: QuadRender,
+    exact: false,
+    menu: true,
   },
   {
     title: "Render",
     url: "/render",
     Component: Render,
     exact: false,
-  },
-  {
-    title: "Shaders",
-    url: "/shaders",
-    Component: QuadRender,
-    exact: false,
+    menu: true,
   },
   {
     title: "Dragon Warrior Monsters",
     url: "/dwm",
     Component: Dwm,
     exact: false,
+    menu: true,
   },
   // {
   //   title: "Magic: The Gathering",
   //   url: "/mtg",
   //   Component: MTG,
   //   exact: false,
+  //   menu: true,
   // },
+  {
+    title: "BaseRedirect",
+    url: "/",
+    Component: BaseRedirect,
+    exact: false,
+    menu: false,
+  },
 ];
 
 const Router = (): JSX.Element => {
   return (
     <BrowserRouter>
-      <div>
-        <NavMenu routes={routes} />
+      <div
+        style={{
+          height: "100%",
+          display: "flex",
+          flexFlow: "column",
+        }}
+      >
+        <div
+          style={{
+            flex: "0 0 auto",
+          }}
+        >
+          <NavMenu routes={routes} />
+        </div>
 
         {/* A <Switch> looks through its children <Route>s and
             renders the first one that matches the current URL. */}
@@ -61,6 +79,7 @@ const Router = (): JSX.Element => {
             maxWidth: "1216px",
             marginLeft: "auto",
             marginRight: "auto",
+            flex: "1 1 auto",
           }}
         >
           <Switch>

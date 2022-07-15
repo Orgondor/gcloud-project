@@ -27,25 +27,25 @@ const MonsterBreeding = ({
   const monster = selected[selected.length - 1];
 
   const getFamilyName = (id: number): string =>
-    families.find((f) => f.id === id).name;
+    families.find((f) => f.id === id)?.name || "";
   const getMonsterName = (id: number): string =>
-    monsters.find((m) => m.id === id).name;
+    monsters.find((m) => m.id === id)?.name || "";
   const getMonsterFamilyId = (id: number): number =>
     monsters.find((m) => m.id === id).familyId;
 
   const getBreedFrom = (monster: Monster): Breed[] => {
     const breedFrom = breeding
       .filter(
-        (b) => b.resultId === monster.id && (b.parent1Id || b.parent1FamliyId)
+        (b) => b.resultId === monster.id && (b.parent1Id || b.parent1FamilyId)
       )
       .map(
         (b): Breed => {
-          const id1 = b.parent1Id || b.parent1FamliyId;
+          const id1 = b.parent1Id || b.parent1FamilyId;
           const name1 = b.parent1Id ? getMonsterName(id1) : getFamilyName(id1);
           const familyId1 = b.parent1Id ? getMonsterFamilyId(id1) : id1;
           const type1: ParentType = b.parent1Id ? "monster" : "family";
 
-          const id2 = b.parent2Id || b.parent2FamliyId;
+          const id2 = b.parent2Id || b.parent2FamilyId;
           const name2 = b.parent2Id ? getMonsterName(id2) : getFamilyName(id2);
           const familyId2 = b.parent2Id ? getMonsterFamilyId(id2) : id2;
           const type2: ParentType = b.parent2Id ? "monster" : "family";
@@ -80,7 +80,7 @@ const MonsterBreeding = ({
       .filter((b) => b.parent1Id === monster.id)
       .map(
         (b): Breed => {
-          const id2 = b.parent2Id || b.parent2FamliyId;
+          const id2 = b.parent2Id || b.parent2FamilyId;
           const name2 = b.parent2Id ? getMonsterName(id2) : getFamilyName(id2);
           const familyId2 = b.parent2Id ? getMonsterFamilyId(id2) : id2;
           const type2: ParentType = b.parent2Id ? "monster" : "family";
@@ -109,10 +109,10 @@ const MonsterBreeding = ({
       );
 
     const f1 = breeding
-      .filter((b) => b.parent1FamliyId === monster.familyId)
+      .filter((b) => b.parent1FamilyId === monster.familyId)
       .map(
         (b): Breed => {
-          const id2 = b.parent2Id || b.parent2FamliyId;
+          const id2 = b.parent2Id || b.parent2FamilyId;
           const name2 = b.parent2Id ? getMonsterName(id2) : getFamilyName(id2);
           const familyId2 = b.parent2Id ? getMonsterFamilyId(id2) : id2;
           const type2: ParentType = b.parent2Id ? "monster" : "family";
@@ -144,7 +144,7 @@ const MonsterBreeding = ({
       .filter((b) => b.parent2Id === monster.id && b.parent2Id !== b.parent1Id)
       .map(
         (b): Breed => {
-          const id1 = b.parent1Id || b.parent1FamliyId;
+          const id1 = b.parent1Id || b.parent1FamilyId;
           const name1 = b.parent1Id ? getMonsterName(id1) : getFamilyName(id1);
           const familyId1 = b.parent1Id ? getMonsterFamilyId(id1) : id1;
           const type1: ParentType = b.parent1Id ? "monster" : "family";
@@ -173,10 +173,10 @@ const MonsterBreeding = ({
       );
 
     const f2 = breeding
-      .filter((b) => b.parent2FamliyId === monster.familyId)
+      .filter((b) => b.parent2FamilyId === monster.familyId)
       .map(
         (b): Breed => {
-          const id1 = b.parent1Id || b.parent1FamliyId;
+          const id1 = b.parent1Id || b.parent1FamilyId;
           const name1 = b.parent1Id ? getMonsterName(id1) : getFamilyName(id1);
           const familyId1 = b.parent1Id ? getMonsterFamilyId(id1) : id1;
           const type1: ParentType = b.parent1Id ? "monster" : "family";
@@ -211,7 +211,7 @@ const MonsterBreeding = ({
   const breedTo = getBreedTo(monster);
 
   return (
-    <div>
+    <Segment>
       <Button basic onClick={() => goBack()}>
         Back
       </Button>
@@ -316,7 +316,7 @@ const MonsterBreeding = ({
           </Grid.Column>
         </Grid.Row>
       </Grid>
-    </div>
+    </Segment>
   );
 };
 

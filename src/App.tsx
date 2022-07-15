@@ -4,7 +4,7 @@ import Router from "./router";
 
 export default function App(): JSX.Element {
   return (
-    <div>
+    <div style={{ height: "100vh", width: "100vw" }}>
       <ProvideAppState>
         <Router />
       </ProvideAppState>

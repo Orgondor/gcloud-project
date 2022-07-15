@@ -2,7 +2,7 @@ import * as React from "react";
 import { useAppState } from "../../hooks/useAppState";
 import MonsterSearch from "./components/monsterSearch";
 import MonsterBreading from "./components/monsterBreading";
-import "./components/dwmTypes";
+import { Monster, Breeding, Family } from "./components/dwmTypes";
 
 import { Segment } from "semantic-ui-react";
 
@@ -13,7 +13,7 @@ const importData = require("../../data/data.json") as {
   breeding: Breeding[];
 };
 
-const Dwm = () => {
+const Dwm: React.FC = () => {
   const appState = useAppState();
   const [families, setFamilies] = React.useState(
     importData.families.map((f) => ({ ...f, selected: true }))
@@ -40,7 +40,13 @@ const Dwm = () => {
   }, [selected]);
 
   return (
-    <Segment>
+    <div
+      style={{
+        width: "100%",
+        height: "100%",
+        marginTop: "10px",
+      }}
+    >
       {selected.length ? (
         <MonsterBreading
           data={importData}
@@ -59,7 +65,7 @@ const Dwm = () => {
           onClickMonster={pushSelected}
         />
       )}
-    </Segment>
+    </div>
   );
 };
 

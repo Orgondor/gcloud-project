@@ -8,8 +8,6 @@ import Camera from "./Camera/camera";
 import MouseEvent from "./EventHandlers/mouse";
 import KeyEvent from "./EventHandlers/keyboard";
 import { QuadShader } from "./Shaders/QuadShader/shader";
-// import diffuse from "../../../images/sexkaitb_2K_Albedo.jpg";
-// import normalMap from "../../../images/sexkaitb_2K_Normal.jpg";
 
 export default (canvasId: string): void => {
   const canvas = document.getElementById(canvasId);

@@ -1,11 +1,17 @@
-import * as React from "react";
+import React, { useState } from "react";
 import { useAppState } from "../../hooks/useAppState";
 import QuadWebGL from "./WebGL/QuadWebGL";
 
 const QuadRender: React.FC = () => {
   const appState = useAppState();
+
+  const [initialized, setInitialized] = useState(false);
+
   React.useEffect(() => {
-    QuadWebGL("quadwebgl");
+    if (!initialized) {
+      QuadWebGL("quadwebgl");
+      setInitialized(true);
+    }
   });
   return (
     <div

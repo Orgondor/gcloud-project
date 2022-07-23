@@ -1,12 +1,19 @@
-import * as React from "react";
+import React, { useState } from "react";
 import { useAppState } from "../../hooks/useAppState";
 import WebGL from "./WebGL/WebGL";
 
 const Render: React.FC = () => {
   const appState = useAppState();
+
+  const [initialized, setInitialized] = useState(false);
+
   React.useEffect(() => {
-    WebGL("webgl");
+    if (!initialized) {
+      WebGL("webgl");
+      setInitialized(true);
+    }
   });
+
   return (
     <div
       style={{

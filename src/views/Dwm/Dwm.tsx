@@ -4,8 +4,6 @@ import MonsterSearch from "./components/monsterSearch";
 import MonsterBreading from "./components/monsterBreading";
 import { Monster, Breeding, Family } from "./components/dwmTypes";
 
-import { Segment } from "semantic-ui-react";
-
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const importData = require("../../data/data.json") as {
   monsters: Monster[];

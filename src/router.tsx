@@ -1,6 +1,5 @@
 import * as React from "react";
-import { BrowserRouter, Switch, Route, Link } from "react-router-dom";
-import { Menu } from "semantic-ui-react";
+import { BrowserRouter, Switch, Route } from "react-router-dom";
 import NavMenu from "./NavMenu";
 import BaseRedirect from "./views/BaseRedirect";
 import Dwm from "./views/Dwm/Dwm";

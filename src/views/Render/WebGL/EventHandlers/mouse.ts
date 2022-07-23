@@ -49,6 +49,31 @@ class MouseListener {
         });
       }
     };
+
+    GLM.gl.canvas.ontouchstart = (e: TouchEvent) => {
+      if (e.changedTouches) {
+        x = e.changedTouches[0].clientX;
+        y = e.changedTouches[0].clientY;
+        dragging = true;
+      }
+    };
+
+    GLM.gl.canvas.ontouchmove = (e: TouchEvent) => {
+      if (e.changedTouches) {
+        const dx = x - e.changedTouches[0].clientX;
+        const dy = y - e.changedTouches[0].clientY;
+        x = e.changedTouches[0].clientX;
+        y = e.changedTouches[0].clientY;
+        this.onDragListeners.forEach((listener) => {
+          listener.ondrag(dx, dy);
+        });
+        dragging = true;
+      }
+    };
+
+    GLM.gl.canvas.ontouchend = (e: TouchEvent) => {
+      dragging = false;
+    };
   };
 
   subscribeToDrag = (listener: DragEventListener) => {

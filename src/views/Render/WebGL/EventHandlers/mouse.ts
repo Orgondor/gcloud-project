@@ -51,6 +51,7 @@ class MouseListener {
     };
 
     GLM.gl.canvas.ontouchstart = (e: TouchEvent) => {
+      e.preventDefault();
       if (e.changedTouches) {
         x = e.changedTouches[0].clientX;
         y = e.changedTouches[0].clientY;
@@ -59,6 +60,7 @@ class MouseListener {
     };
 
     GLM.gl.canvas.ontouchmove = (e: TouchEvent) => {
+      e.preventDefault();
       if (e.changedTouches) {
         const dx = x - e.changedTouches[0].clientX;
         const dy = y - e.changedTouches[0].clientY;
@@ -72,6 +74,7 @@ class MouseListener {
     };
 
     GLM.gl.canvas.ontouchend = (e: TouchEvent) => {
+      e.preventDefault();
       dragging = false;
     };
   };

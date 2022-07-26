@@ -4,6 +4,7 @@ import NavMenu from "./NavMenu";
 import BaseRedirect from "./views/BaseRedirect";
 import Dwm from "./views/Dwm/Dwm";
 import MTG from "./views/MTG/MTG";
+import WaveCollapse from "./views/WaveCollapse";
 import Render from "./views/Render/Render";
 import QuadRender from "./views/Render/QuadRender";
 
@@ -27,6 +28,13 @@ const routes: ViewRoute[] = [
     title: "Render",
     url: "/render",
     Component: Render,
+    exact: false,
+    menu: true,
+  },
+  {
+    title: "Wave Collapse",
+    url: "/wave-collapse",
+    Component: WaveCollapse,
     exact: false,
     menu: true,
   },

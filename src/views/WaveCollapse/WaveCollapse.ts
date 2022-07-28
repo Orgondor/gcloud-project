@@ -2,8 +2,8 @@ import getPixels from "get-pixels";
 import { NdArray } from "ndarray";
 import { renderSize } from "./defines";
 import { loadSprites } from "./loadSprites";
-import { Edge } from "./types";
-import { logSprite, pixelsToString } from "./util";
+import { chooseSprite, drawTile, initTiles } from "./tile";
+import { sleep } from "./util";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const imageSrc = require("../../images/SimpleSprites.png");
@@ -32,29 +32,14 @@ export const WaveCollapse = async (canvasId: string): Promise<void> => {
 
   const pixels = await getPixelsPromise(imageSrc);
   const sprites = await loadSprites(pixels);
+  const tiles = initTiles(sprites, canvasWidth, canvasHeight);
 
-  for (let i = 0; i < 4; i++) {
-    logSprite(sprites[i]);
-    console.log(
-      `edges:\n${pixelsToString([
-        sprites[i].edges[Edge.Top],
-      ])}\n${pixelsToString([sprites[i].edges[Edge.Right]])}\n${pixelsToString([
-        sprites[i].edges[Edge.Bottom],
-      ])}\n${pixelsToString([sprites[i].edges[Edge.Left]])}`
-    );
+  let remainingTiles = tiles;
+
+  while (remainingTiles.length) {
+    const tile = chooseSprite(remainingTiles);
+    drawTile(context, tile);
+    remainingTiles = remainingTiles.filter((tile) => !tile.chosenSprite);
+    await sleep(100);
   }
-
-  sprites.forEach((sprite, i) => {
-    context.translate(
-      renderSize / 2 + renderSize * (i % canvasWidth),
-      renderSize / 2 + renderSize * Math.floor(i / canvasWidth)
-    );
-    context.rotate(sprite.rotation);
-    context.drawImage(sprite.image, -(renderSize / 2), -renderSize / 2);
-    context.rotate(-sprite.rotation);
-    context.translate(
-      -(renderSize / 2 + renderSize * (i % canvasWidth)),
-      -(renderSize / 2 + renderSize * Math.floor(i / canvasWidth))
-    );
-  });
 };

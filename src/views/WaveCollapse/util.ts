@@ -1,5 +1,12 @@
 import { pixelSize, spriteSize } from "./defines";
-import { Sprite } from "./types";
+import { Edge, EdgeMap, Sprite } from "./types";
+
+export const randomInt = (max: number): number => {
+  return Math.min(Math.floor(Math.random() * (max + 1)), max);
+};
+
+export const randomEntry = <T>(array: Array<T>): T =>
+  array[randomInt(array.length - 1)];
 
 export const pixelRowEqual = (
   a: Uint8Array | number[],
@@ -35,11 +42,7 @@ export const pixelsEqual = (
   return true;
 };
 
-export const randomInt = (max: number) => {
-  return Math.min(Math.floor(Math.random() * (max + 1)), max);
-};
-
-export const pixelsToString = (pixels: Uint8Array[]): string => {
+export const pixelsToLogString = (pixels: Uint8Array[]): string => {
   let result = "";
 
   pixels.forEach((pixelRow) => {
@@ -60,11 +63,56 @@ export const pixelsToString = (pixels: Uint8Array[]): string => {
   return result;
 };
 
-export const logSprite = (sprite: Sprite) => {
+export const pixelToHex = (pixel: Uint8Array): string => {
+  let result = "";
+
+  for (let i = 0; i < Math.min(pixel.length, 4); i++) {
+    result += pixel[i].toString(16).padStart(2, "0");
+  }
+
+  return result;
+};
+
+export const pixelRowToHex = (pixelRow: Uint8Array): string => {
+  let result = "";
+
+  pixelRow.forEach((value) => {
+    result += value.toString(16).padStart(2, "0");
+  });
+
+  return result;
+};
+
+export const pixelsToHex = (pixels: Uint8Array[]): string[][] => {
+  const result: string[][] = [];
+
+  pixels.forEach((pixelRow, i) => {
+    result.push([]);
+
+    for (let j = 0; j < pixelRow.length; j += 4) {
+      result[i].push(pixelToHex(pixelRow.slice(j, j + 4)));
+    }
+  });
+
+  return result;
+};
+
+export const pixelToInt = (pixel: Uint8Array): number => {
+  if (pixel.length < 4) {
+    throw new Error("invalid pixel, length < 4");
+  }
+
+  const buffer = new Uint32Array(1); // Needed to keep it unsigned
+  buffer[0] = (pixel[0] << 24) | (pixel[1] << 16) | (pixel[2] << 8) | pixel[3];
+
+  return buffer[0];
+};
+
+export const logSprite = (sprite: Sprite): void => {
   console.log(
     `rotation: ${Math.round((sprite.rotation * 180) / Math.PI)}\nflipped: ${
       sprite.flippedY
-    }\npixels:\n${pixelsToString(sprite.pixels)}`
+    }\npixels:\n${pixelsToLogString(sprite.pixels)}`
   );
 };
 
@@ -86,13 +134,13 @@ export const extractPixelColumn = (
 export const extractSpriteEdges = (
   spritePixels: Uint8Array[],
   spriteRowSize: number
-): Uint8Array[] => {
+): string[] => {
   const edges: Uint8Array[] = [];
   edges.push(spritePixels[0]);
   edges.push(extractPixelColumn(spritePixels, spriteRowSize - 1));
   edges.push(spritePixels[spritePixels.length - 1]);
   edges.push(extractPixelColumn(spritePixels, 0));
-  return edges;
+  return edges.map((edge) => pixelRowToHex(edge));
 };
 
 export const rotateSpritePixels = (
@@ -111,3 +159,16 @@ export const spriteAlreadyExists = (
 ): boolean => {
   return sprites.some((data) => pixelsEqual(data.pixels, spritePixels));
 };
+
+export const sleep = async (ms: number): Promise<void> => {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+};
+
+export const getEmptyEdgeMap = (): EdgeMap => ({
+  [Edge.Top]: {},
+  [Edge.Right]: {},
+  [Edge.Bottom]: {},
+  [Edge.Left]: {},
+});

@@ -13,12 +13,16 @@
     "deploy": "gcloud app deploy --project=maxlindgren --version=1",
     "browse": "gcloud app browse --project=maxlindgren",
     "lint": "eslint '*/**/*.{js,jsx,ts,tsx}'",
-    "lint:fix": "yarn lint --quiet --fix"
+    "lint:fix": "yarn lint --quiet --fix",
+    "test": "jest"
   },
   "dependencies": {
+    "@babel/preset-typescript": "^7.18.6",
     "axios": "^0.21.1",
+    "babel-jest": "^28.1.3",
     "get-pixels": "^3.3.3",
     "gl-matrix": "^3.3.0",
+    "jest": "^28.1.3",
     "qs": "^6.9.6",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
@@ -33,6 +37,7 @@
   "devDependencies": {
     "@types/get-pixels": "^3.3.2",
     "@types/gl-matrix": "^3.2.0",
+    "@types/jest": "^28.1.6",
     "@types/node": "^14.14.6",
     "@types/qs": "^6.9.5",
     "@types/react": "^16.9.55",

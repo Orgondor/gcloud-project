@@ -1,13 +1,6 @@
 import getPixels from "get-pixels";
 import { NdArray } from "ndarray";
-import {
-  cancel,
-  renderSize,
-  setNumberOfSprites,
-  setSpriteSize,
-  speed,
-  startWaveCollapse,
-} from "./defines";
+import { cancel, renderSize, speed, startWaveCollapse } from "./defines";
 import { loadSprites } from "./loadSprites";
 import { chooseSprite, drawTile, initTiles } from "./tile";
 import { MapSetting } from "./types";
@@ -33,8 +26,6 @@ export const WaveCollapse = async (
 ): Promise<void> => {
   setRunning(true);
   setCancel(false);
-  setSpriteSize(mapSetting.spriteSize);
-  setNumberOfSprites(mapSetting.numberOfSprites);
   startWaveCollapse();
 
   const canvas: HTMLCanvasElement = document.getElementById(
@@ -49,7 +40,11 @@ export const WaveCollapse = async (
   context.imageSmoothingEnabled = false;
 
   const pixels = await getPixelsPromise(imageSrc);
-  const sprites = await loadSprites(pixels);
+  const sprites = await loadSprites(pixels, mapSetting);
+
+  // sprites.forEach((sprite, i) => {
+  //   console.log(`sprite: ${i + 1}\n${spriteToLogString(sprite)}`);
+  // });
 
   const tiles = initTiles(sprites, canvasWidth, canvasHeight);
 

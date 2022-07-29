@@ -1,5 +1,15 @@
-import { pixelSize, spriteSize } from "./defines";
-import { Edge, EdgeMap, Sprite } from "./types";
+import { pixelSize } from "./defines";
+import {
+  Edge,
+  EdgeMap,
+  FlipMode,
+  flipRotation,
+  MapSetting,
+  RotateMode,
+  RotationDegrees,
+  RotationMap,
+  Sprite,
+} from "./types";
 
 export const randomInt = (max: number): number => {
   return Math.min(Math.floor(Math.random() * (max + 1)), max);
@@ -7,6 +17,35 @@ export const randomInt = (max: number): number => {
 
 export const randomEntry = <T>(array: Array<T>): T =>
   array[randomInt(array.length - 1)];
+
+type WeightedEntry = {
+  weight: number;
+};
+
+export const weightedRandomEntry = <T extends WeightedEntry>(
+  array: Array<T>
+): T => {
+  let range = 0;
+  array.forEach((value) => {
+    range += value.weight;
+  });
+
+  const value = Math.random() * range;
+  let count = array[0].weight;
+
+  return array.find((_, i) => {
+    if (i >= array.length - 1) {
+      return true;
+    }
+
+    if (value < count) {
+      return true;
+    }
+
+    count += array[i + 1].weight;
+    return false;
+  });
+};
 
 export const pixelRowEqual = (
   a: Uint8Array | number[],
@@ -65,6 +104,18 @@ export const pixelsToLogString = (pixels: Uint8Array[]): string => {
         result += "V";
       } else if (pixelRowEqual(pixelRow.slice(i, i + 4), [26, 26, 26, 255])) {
         result += "C";
+      } else if (
+        pixelRowEqual(pixelRow.slice(i, i + 4), [0x2f, 0xa0, 0x02, 0xff])
+      ) {
+        result += "G";
+      } else if (
+        pixelRowEqual(pixelRow.slice(i, i + 4), [0x40, 0x40, 0x40, 0xff])
+      ) {
+        result += "R";
+      } else if (
+        pixelRowEqual(pixelRow.slice(i, i + 4), [0x81, 0x81, 0x81, 0xff])
+      ) {
+        result += "r";
       } else {
         result += "?";
       }
@@ -158,7 +209,7 @@ export const rotateSpritePixels = (
   spritePixels: Uint8Array[]
 ): Uint8Array[] => {
   const rotated: Uint8Array[] = [];
-  [...Array(spriteSize)].forEach((_, i) => {
+  [...Array(spritePixels.length)].forEach((_, i) => {
     rotated.push(extractPixelColumn(spritePixels, i, true));
   });
   return rotated;
@@ -183,3 +234,81 @@ export const getEmptyEdgeMap = (): EdgeMap => ({
   [Edge.Bottom]: {},
   [Edge.Left]: {},
 });
+
+export const getSpriteRotationMap = (
+  mapSetting: MapSetting,
+  spriteIndex: number
+): RotationMap => {
+  const { rotation } = mapSetting;
+  const map: RotationMap = {};
+
+  switch (rotation.rotateMode) {
+    case RotateMode.All:
+      map[RotationDegrees.Zero] = true;
+      map[RotationDegrees.Ninety] = true;
+      map[RotationDegrees.OneEighty] = true;
+      map[RotationDegrees.TwoForty] = true;
+      break;
+    case RotateMode.Select:
+      if (rotation.spritesToRotate.includes(spriteIndex)) {
+        map[RotationDegrees.Zero] = true;
+        map[RotationDegrees.Ninety] = true;
+        map[RotationDegrees.OneEighty] = true;
+        map[RotationDegrees.TwoForty] = true;
+      } else {
+        map[RotationDegrees.Zero] = true;
+      }
+      break;
+    case RotateMode.Individual:
+      if (rotation.spritesToRotate[spriteIndex]) {
+        rotation.spritesToRotate[spriteIndex].forEach((degrees) => {
+          map[degrees] = true;
+        });
+      } else {
+        map[RotationDegrees.Zero] = true;
+      }
+      break;
+
+    default:
+      break;
+  }
+
+  return map;
+};
+
+export const getSpriteFlipMap = (
+  mapSetting: MapSetting,
+  spriteIndex: number
+): RotationMap => {
+  const { flip } = mapSetting;
+  const map: RotationMap = {};
+
+  switch (flip.flipMode) {
+    case FlipMode.All:
+      map[RotationDegrees.Zero] = true;
+      map[RotationDegrees.Ninety] = true;
+      map[RotationDegrees.OneEighty] = true;
+      map[RotationDegrees.TwoForty] = true;
+      break;
+    case FlipMode.Select:
+      if (flip.spritesToFlip.includes(spriteIndex)) {
+        map[RotationDegrees.Zero] = true;
+        map[RotationDegrees.Ninety] = true;
+        map[RotationDegrees.OneEighty] = true;
+        map[RotationDegrees.TwoForty] = true;
+      }
+      break;
+    case FlipMode.Individual:
+      if (flip.spritesToFlip[spriteIndex]) {
+        flip.spritesToFlip[spriteIndex].forEach((degrees) => {
+          map[flipRotation[degrees]] = true;
+        });
+      }
+      break;
+
+    default:
+      break;
+  }
+
+  return map;
+};

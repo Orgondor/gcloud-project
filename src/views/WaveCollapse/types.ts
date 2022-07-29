@@ -4,6 +4,7 @@ export type Sprite = {
   pixels: Uint8Array[];
   edges: string[];
   image: ImageBitmap;
+  weight: number;
 };
 
 export type EdgeMap = Record<Edge, Record<string, boolean>>;
@@ -42,9 +43,79 @@ export type RunControl = {
 
 export type PathMap = Record<string, string>;
 
+export enum RotateMode {
+  All = "all",
+  Select = "select",
+  Individual = "individual",
+}
+
+export type RotateAll = {
+  rotateMode: RotateMode.All;
+};
+
+export type RotateSelect = {
+  rotateMode: RotateMode.Select;
+  spritesToRotate: number[];
+};
+
+export enum RotationDegrees {
+  Zero = "0",
+  Ninety = "90",
+  OneEighty = "180",
+  TwoForty = "240",
+}
+
+export type RotateIndividual = {
+  rotateMode: RotateMode.Individual;
+  spritesToRotate: Record<number, RotationDegrees[]>;
+};
+
+export type Rotation = RotateAll | RotateSelect | RotateIndividual;
+
+export enum FlipMode {
+  All = "all",
+  Select = "select",
+  Individual = "individual",
+}
+
+export type FlipAll = {
+  flipMode: FlipMode.All;
+};
+
+export type FlipSelect = {
+  flipMode: FlipMode.Select;
+  spritesToFlip: number[];
+};
+
+export enum FlipDegrees {
+  X = "x",
+  Y = "y",
+  YNinety = "y90",
+  YTwoForty = "y240",
+}
+
+export const flipRotation: Record<FlipDegrees, RotationDegrees> = {
+  [FlipDegrees.Y]: RotationDegrees.Zero,
+  [FlipDegrees.YNinety]: RotationDegrees.Ninety,
+  [FlipDegrees.X]: RotationDegrees.OneEighty,
+  [FlipDegrees.YTwoForty]: RotationDegrees.TwoForty,
+};
+
+export type FlipIndividual = {
+  flipMode: FlipMode.Individual;
+  spritesToFlip: Record<number, FlipDegrees[]>;
+};
+
+export type Flip = FlipAll | FlipSelect | FlipIndividual;
+
 export type MapSetting = {
   spriteSize: number;
   numberOfSprites: number;
+  rotation: Rotation;
+  flip: Flip;
+  weights?: number[];
 };
 
 export type MapSettings = Record<string, MapSetting>;
+
+export type RotationMap = Record<RotationDegrees | string, boolean>;

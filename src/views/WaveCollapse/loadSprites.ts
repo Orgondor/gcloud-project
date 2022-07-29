@@ -1,24 +1,23 @@
 import { NdArray } from "ndarray";
-import {
-  numberOfSprites,
-  pixelSize,
-  pixelSpriteSize,
-  renderSize,
-  spriteSize,
-} from "./defines";
-import { Sprite } from "./types";
+import { pixelSize, renderSize } from "./defines";
+import { MapSetting, RotationDegrees, Sprite } from "./types";
 import {
   extractSpriteEdges,
+  getSpriteFlipMap,
+  getSpriteRotationMap,
   rotateSpritePixels,
   spriteAlreadyExists,
 } from "./util";
 
 export const loadSprites = async (
-  pixels: NdArray<Uint8Array>
+  pixels: NdArray<Uint8Array>,
+  mapSetting: MapSetting
 ): Promise<Sprite[]> => {
+  const { spriteSize, numberOfSprites, weights } = mapSetting;
   const sprites: Sprite[] = [];
   const mapWidth = pixels.shape[0];
   const mapHeight = pixels.shape[1];
+  const pixelSpriteSize = pixelSize * spriteSize;
   const pixelRowSize = pixelSize * mapWidth;
   const spriteRowSize = Math.floor(mapWidth / spriteSize);
 
@@ -53,6 +52,10 @@ export const loadSprites = async (
     const spriteIndex = i % numberOfSprites;
     const flipped = i >= numberOfSprites;
 
+    const rotationMap = flipped
+      ? getSpriteFlipMap(mapSetting, spriteIndex)
+      : getSpriteRotationMap(mapSetting, spriteIndex);
+
     let spritePixels = [...Array(spriteSize)].map((_, j) => {
       const row =
         Math.floor(spriteIndex / spriteRowSize) * pixelRowSize * spriteSize;
@@ -66,29 +69,40 @@ export const loadSprites = async (
       spritePixels.reverse();
     }
 
-    if (!spriteAlreadyExists(sprites, spritePixels)) {
+    if (
+      rotationMap[RotationDegrees.Zero] &&
+      !spriteAlreadyExists(sprites, spritePixels)
+    ) {
       sprites.push({
         pixels: spritePixels,
         edges: extractSpriteEdges(spritePixels),
         rotation: 0,
         flippedY: flipped,
         image: images[i],
+        weight: weights ? weights[spriteIndex] ?? 1 : 1,
       });
     }
 
+    const rotationDegrees = [
+      RotationDegrees.Ninety,
+      RotationDegrees.OneEighty,
+      RotationDegrees.TwoForty,
+    ];
     for (let r = 0; r < 3; r++) {
       spritePixels = rotateSpritePixels(spritePixels);
 
-      if (!spriteAlreadyExists(sprites, spritePixels)) {
+      if (
+        rotationMap[rotationDegrees[r]] &&
+        !spriteAlreadyExists(sprites, spritePixels)
+      ) {
         sprites.push({
           pixels: spritePixels,
           edges: extractSpriteEdges(spritePixels),
           rotation: (Math.PI * (r + 1)) / 2,
           flippedY: flipped,
           image: images[i],
+          weight: weights ? weights[spriteIndex] || 1 : 1,
         });
-      } else {
-        break;
       }
     }
   });

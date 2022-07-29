@@ -1,6 +1,6 @@
 import { halfTile, renderSize } from "./defines";
 import { Edge, opposingEdge, Sprite, Tile } from "./types";
-import { getEmptyEdgeMap, spriteToLogString, randomEntry } from "./util";
+import { getEmptyEdgeMap, randomEntry, weightedRandomEntry } from "./util";
 
 export const drawSprite = (
   context: CanvasRenderingContext2D,
@@ -124,7 +124,7 @@ export const chooseSprite = (tiles: Tile[]): Tile => {
     throw new Error("chooseSprite failed, sprite already chosen");
   }
 
-  tile.chosenSprite = randomEntry(tile.options);
+  tile.chosenSprite = weightedRandomEntry(tile.options);
   tile.options = [tile.chosenSprite];
   setTileEdgeMap(tile);
 

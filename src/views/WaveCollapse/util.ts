@@ -53,6 +53,18 @@ export const pixelsToLogString = (pixels: Uint8Array[]): string => {
         result += "#";
       } else if (pixelRowEqual(pixelRow.slice(i, i + 4), [255, 0, 0, 255])) {
         result += "@";
+      } else if (pixelRowEqual(pixelRow.slice(i, i + 4), [0, 0, 0, 255])) {
+        result += "S";
+      } else if (pixelRowEqual(pixelRow.slice(i, i + 4), [49, 51, 49, 255])) {
+        result += "B";
+      } else if (pixelRowEqual(pixelRow.slice(i, i + 4), [109, 87, 6, 255])) {
+        result += "T";
+      } else if (
+        pixelRowEqual(pixelRow.slice(i, i + 4), [109, 109, 109, 255])
+      ) {
+        result += "V";
+      } else if (pixelRowEqual(pixelRow.slice(i, i + 4), [26, 26, 26, 255])) {
+        result += "C";
       } else {
         result += "?";
       }
@@ -108,12 +120,14 @@ export const pixelToInt = (pixel: Uint8Array): number => {
   return buffer[0];
 };
 
-export const logSprite = (sprite: Sprite): void => {
-  console.log(
-    `rotation: ${Math.round((sprite.rotation * 180) / Math.PI)}\nflipped: ${
-      sprite.flippedY
-    }\npixels:\n${pixelsToLogString(sprite.pixels)}`
-  );
+export const spriteToLogString = (sprite: Sprite): string => {
+  return `rotation: ${Math.round(
+    (sprite.rotation * 180) / Math.PI
+  )}\nflipped: ${sprite.flippedY}\npixels:\n${pixelsToLogString(
+    sprite.pixels
+  )}edges:\n${sprite.edges[0]}\n${sprite.edges[1]}\n${sprite.edges[2]}\n${
+    sprite.edges[3]
+  }`;
 };
 
 export const extractPixelColumn = (
@@ -131,13 +145,10 @@ export const extractPixelColumn = (
   return columnPixels;
 };
 
-export const extractSpriteEdges = (
-  spritePixels: Uint8Array[],
-  spriteRowSize: number
-): string[] => {
+export const extractSpriteEdges = (spritePixels: Uint8Array[]): string[] => {
   const edges: Uint8Array[] = [];
   edges.push(spritePixels[0]);
-  edges.push(extractPixelColumn(spritePixels, spriteRowSize - 1));
+  edges.push(extractPixelColumn(spritePixels, spritePixels.length - 1));
   edges.push(spritePixels[spritePixels.length - 1]);
   edges.push(extractPixelColumn(spritePixels, 0));
   return edges.map((edge) => pixelRowToHex(edge));

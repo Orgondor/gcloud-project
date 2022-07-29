@@ -69,7 +69,7 @@ export const loadSprites = async (
     if (!spriteAlreadyExists(sprites, spritePixels)) {
       sprites.push({
         pixels: spritePixels,
-        edges: extractSpriteEdges(spritePixels, spriteRowSize),
+        edges: extractSpriteEdges(spritePixels),
         rotation: 0,
         flippedY: flipped,
         image: images[i],
@@ -82,7 +82,7 @@ export const loadSprites = async (
       if (!spriteAlreadyExists(sprites, spritePixels)) {
         sprites.push({
           pixels: spritePixels,
-          edges: extractSpriteEdges(spritePixels, spriteRowSize),
+          edges: extractSpriteEdges(spritePixels),
           rotation: (Math.PI * (r + 1)) / 2,
           flippedY: flipped,
           image: images[i],

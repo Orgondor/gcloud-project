@@ -1,6 +1,6 @@
 import { halfTile, renderSize } from "./defines";
 import { Edge, opposingEdge, Sprite, Tile } from "./types";
-import { getEmptyEdgeMap, logSprite, randomEntry } from "./util";
+import { getEmptyEdgeMap, spriteToLogString, randomEntry } from "./util";
 
 export const drawSprite = (
   context: CanvasRenderingContext2D,

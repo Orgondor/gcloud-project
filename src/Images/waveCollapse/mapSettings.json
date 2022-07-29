@@ -1,0 +1,10 @@
+{
+  "SimpleSprites": {
+    "spriteSize": 3,
+    "numberOfSprites": 6
+  },
+  "CircuitTiles": {
+    "spriteSize": 15,
+    "numberOfSprites": 15
+  }
+}

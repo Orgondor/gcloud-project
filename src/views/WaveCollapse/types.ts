@@ -34,3 +34,17 @@ export type Neighbor = {
   tile: Tile;
   edge: Edge;
 };
+
+export type RunControl = {
+  setRunning: (running: boolean) => void;
+  setCancel: (cancel: boolean) => void;
+};
+
+export type PathMap = Record<string, string>;
+
+export type MapSetting = {
+  spriteSize: number;
+  numberOfSprites: number;
+};
+
+export type MapSettings = Record<string, MapSetting>;

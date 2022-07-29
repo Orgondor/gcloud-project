@@ -32,7 +32,7 @@ const routes: ViewRoute[] = [
     menu: true,
   },
   {
-    title: "Wave Collapse",
+    title: "Wave Function Collapse",
     url: "/wave-collapse",
     Component: WaveCollapse,
     exact: false,

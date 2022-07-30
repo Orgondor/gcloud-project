@@ -84,6 +84,7 @@ const WaveCollapseView: React.FC = () => {
           justifyContent="center"
           alignItems="center"
         >
+          <div>Choose Texture:</div>
           {Object.keys(mapSettings).map((filename, i) => (
             <img
               key={i}
@@ -113,7 +114,7 @@ const WaveCollapseView: React.FC = () => {
             aria-label="Speed"
             sx={{ width: "min(500px, 50vw)" }}
             min={0}
-            max={3}
+            max={2}
             step={0.01}
             value={value}
             onChange={handleChange}

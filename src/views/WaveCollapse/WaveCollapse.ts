@@ -60,7 +60,7 @@ export const WaveCollapse = async (
       const tile = chooseSprite(remainingTiles);
       drawTile(context, tile);
       remainingTiles = remainingTiles.filter((tile) => !tile.chosenSprite);
-      await sleep(Math.pow(10, 4 - speed));
+      await sleep(Math.pow(10, 3 - speed));
     } catch (error) {
       console.log("Wave collapse failed", error);
       break;

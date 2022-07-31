@@ -50,6 +50,8 @@ export const WaveCollapse = async (
 
   let remainingTiles = tiles;
 
+  await sleep(100);
+
   while (remainingTiles.length) {
     try {
       if (cancel) {

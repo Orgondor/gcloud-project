@@ -80,7 +80,7 @@ const WaveCollapseView: React.FC = () => {
         <Stack
           spacing={2}
           direction="row"
-          sx={{ mb: 1 }}
+          sx={{ flexWrap: "wrap" }}
           justifyContent="center"
           alignItems="center"
         >

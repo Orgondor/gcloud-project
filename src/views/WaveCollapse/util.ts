@@ -47,33 +47,25 @@ export const weightedRandomEntry = <T extends WeightedEntry>(
   });
 };
 
-export const pixelRowEqual = (
-  a: Uint8Array | number[],
-  b: Uint8Array | number[]
+export const arrayEqual = (
+  a: Array<unknown> | Uint8Array,
+  b: Array<unknown> | Uint8Array
 ): boolean => {
   if (a.length !== b.length) {
     return false;
   }
 
   for (let i = 0; i < a.length; i++) {
-    if (a[i] !== b[i]) {
-      return false;
-    }
-  }
-
-  return true;
-};
-
-export const pixelsEqual = (
-  a: Uint8Array[] | number[][],
-  b: Uint8Array[] | number[][]
-): boolean => {
-  if (a.length !== b.length) {
-    return false;
-  }
-
-  for (let i = 0; i < a.length; i++) {
-    if (!pixelRowEqual(a[i], b[i])) {
+    const a2 = a[i];
+    const b2 = b[i];
+    if (
+      (a2 instanceof Array || a2 instanceof Uint8Array) &&
+      (b2 instanceof Array || b2 instanceof Uint8Array)
+    ) {
+      if (!arrayEqual(a2, b2)) {
+        return false;
+      }
+    } else if (a2 !== b2) {
       return false;
     }
   }
@@ -86,34 +78,32 @@ export const pixelsToLogString = (pixels: Uint8Array[]): string => {
 
   pixels.forEach((pixelRow) => {
     for (let i = 0; i < pixelRow.length; i += 4) {
-      if (pixelRowEqual(pixelRow.slice(i, i + 4), [255, 255, 255, 255])) {
+      if (arrayEqual(pixelRow.slice(i, i + 4), [255, 255, 255, 255])) {
         result += "O";
-      } else if (pixelRowEqual(pixelRow.slice(i, i + 4), [0, 0, 255, 255])) {
+      } else if (arrayEqual(pixelRow.slice(i, i + 4), [0, 0, 255, 255])) {
         result += "#";
-      } else if (pixelRowEqual(pixelRow.slice(i, i + 4), [255, 0, 0, 255])) {
+      } else if (arrayEqual(pixelRow.slice(i, i + 4), [255, 0, 0, 255])) {
         result += "@";
-      } else if (pixelRowEqual(pixelRow.slice(i, i + 4), [0, 0, 0, 255])) {
+      } else if (arrayEqual(pixelRow.slice(i, i + 4), [0, 0, 0, 255])) {
         result += "S";
-      } else if (pixelRowEqual(pixelRow.slice(i, i + 4), [49, 51, 49, 255])) {
+      } else if (arrayEqual(pixelRow.slice(i, i + 4), [49, 51, 49, 255])) {
         result += "B";
-      } else if (pixelRowEqual(pixelRow.slice(i, i + 4), [109, 87, 6, 255])) {
+      } else if (arrayEqual(pixelRow.slice(i, i + 4), [109, 87, 6, 255])) {
         result += "T";
-      } else if (
-        pixelRowEqual(pixelRow.slice(i, i + 4), [109, 109, 109, 255])
-      ) {
+      } else if (arrayEqual(pixelRow.slice(i, i + 4), [109, 109, 109, 255])) {
         result += "V";
-      } else if (pixelRowEqual(pixelRow.slice(i, i + 4), [26, 26, 26, 255])) {
+      } else if (arrayEqual(pixelRow.slice(i, i + 4), [26, 26, 26, 255])) {
         result += "C";
       } else if (
-        pixelRowEqual(pixelRow.slice(i, i + 4), [0x2f, 0xa0, 0x02, 0xff])
+        arrayEqual(pixelRow.slice(i, i + 4), [0x2f, 0xa0, 0x02, 0xff])
       ) {
         result += "G";
       } else if (
-        pixelRowEqual(pixelRow.slice(i, i + 4), [0x40, 0x40, 0x40, 0xff])
+        arrayEqual(pixelRow.slice(i, i + 4), [0x40, 0x40, 0x40, 0xff])
       ) {
         result += "R";
       } else if (
-        pixelRowEqual(pixelRow.slice(i, i + 4), [0x81, 0x81, 0x81, 0xff])
+        arrayEqual(pixelRow.slice(i, i + 4), [0x81, 0x81, 0x81, 0xff])
       ) {
         result += "r";
       } else {
@@ -196,7 +186,27 @@ export const extractPixelColumn = (
   return columnPixels;
 };
 
-export const extractSpriteEdges = (spritePixels: Uint8Array[]): string[] => {
+export const extractSpriteEdges = (
+  mapSetting: MapSetting,
+  spritePixels: Uint8Array[],
+  spriteIndex: number,
+  flipped: boolean
+): string[] => {
+  if (mapSetting.customEdges) {
+    const edges = mapSetting.customEdges[spriteIndex].slice();
+
+    if (flipped) {
+      const tmp1 = edges[0];
+      const tmp2 = edges[2];
+      edges[0] = tmp2;
+      edges[2] = tmp1;
+      edges[1] = reverseEdge(edges[1]);
+      edges[3] = reverseEdge(edges[3]);
+    }
+
+    return edges;
+  }
+
   const edges: Uint8Array[] = [];
   edges.push(spritePixels[0]);
   edges.push(extractPixelColumn(spritePixels, spritePixels.length - 1));
@@ -215,12 +225,38 @@ export const rotateSpritePixels = (
   return rotated;
 };
 
+export const reverseEdge = (edge: string): string => {
+  const pixelLength = pixelSize * 2;
+  if (edge.length % pixelLength !== 0) {
+    throw new Error("reverseEdge - Invalid edge");
+  }
+
+  let reversed = "";
+  for (let i = edge.length - pixelLength; i >= 0; i -= pixelLength) {
+    reversed += edge.slice(i, i + pixelLength);
+  }
+
+  return reversed;
+};
+
+export const rotateEdges = (edges: string[]): string[] => {
+  if (edges.length !== 4) {
+    throw new Error("rotateEdges - Invalid edges");
+  }
+
+  const rotated = [
+    reverseEdge(edges[3]),
+    edges[0],
+    reverseEdge(edges[1]),
+    edges[2],
+  ];
+  return rotated;
+};
+
 export const spriteAlreadyExists = (
   sprites: Sprite[],
   spritePixels: Uint8Array[]
-): boolean => {
-  return sprites.some((data) => pixelsEqual(data.pixels, spritePixels));
-};
+): boolean => sprites.some((data) => arrayEqual(data.pixels, spritePixels));
 
 export const sleep = async (ms: number): Promise<void> => {
   return new Promise((resolve) => {

@@ -5,6 +5,7 @@ import {
   extractSpriteEdges,
   getSpriteFlipMap,
   getSpriteRotationMap,
+  rotateEdges,
   rotateSpritePixels,
   spriteAlreadyExists,
 } from "./util";
@@ -69,13 +70,20 @@ export const loadSprites = async (
       spritePixels.reverse();
     }
 
+    let edges = extractSpriteEdges(
+      mapSetting,
+      spritePixels,
+      spriteIndex,
+      flipped
+    );
+
     if (
       rotationMap[RotationDegrees.Zero] &&
       !spriteAlreadyExists(sprites, spritePixels)
     ) {
       sprites.push({
         pixels: spritePixels,
-        edges: extractSpriteEdges(spritePixels),
+        edges,
         rotation: 0,
         flippedY: flipped,
         image: images[i],
@@ -90,6 +98,7 @@ export const loadSprites = async (
     ];
     for (let r = 0; r < 3; r++) {
       spritePixels = rotateSpritePixels(spritePixels);
+      edges = rotateEdges(edges);
 
       if (
         rotationMap[rotationDegrees[r]] &&
@@ -97,11 +106,11 @@ export const loadSprites = async (
       ) {
         sprites.push({
           pixels: spritePixels,
-          edges: extractSpriteEdges(spritePixels),
+          edges,
           rotation: (Math.PI * (r + 1)) / 2,
           flippedY: flipped,
           image: images[i],
-          weight: weights ? weights[spriteIndex] || 1 : 1,
+          weight: weights ? weights[spriteIndex] ?? 1 : 1,
         });
       }
     }

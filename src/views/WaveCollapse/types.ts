@@ -113,7 +113,8 @@ export type MapSetting = {
   numberOfSprites: number;
   rotation: Rotation;
   flip: Flip;
-  weights?: number[];
+  weights?: Record<number, number>;
+  customEdges?: Record<number, string[]>;
 };
 
 export type MapSettings = Record<string, MapSetting>;
